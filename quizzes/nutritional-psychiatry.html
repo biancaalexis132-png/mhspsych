@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nutritional Psychiatry: Food as Medicine – Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Jost:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:#faf8f5;--bg2:#ffffff;--bg3:#f5f0ea;--surface:#f0ebe3;--surface2:#e8dfd4;
+  --border:#ddd3c4;--border2:#c9b9a6;--text:#2d1f14;--text2:#6b5143;--text3:#9e8270;
+  --accent:#b5845a;--accent2:#c9956b;--green:#6b8f71;--yellow:#c49a3c;--red:#b05050;
+  --purple:#7e6a9e;--cyan:#4d8a8a;--cream:#fdf9f4;
+  --font-head:'Cormorant Garamond',Georgia,serif;
+  --font-body:'Jost',sans-serif;
+  --font-mono:'DM Mono',monospace;
+  --radius:10px;--radius-sm:6px;
+  --shadow:0 2px 16px rgba(45,31,20,0.08);
+  --shadow-lg:0 6px 40px rgba(45,31,20,0.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+a{color:var(--accent2);text-decoration:none}
+button{cursor:pointer;font-family:var(--font-body);border:none;background:none;color:inherit}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.2}
+
+.app-nav{background:var(--cream);border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:16px;height:64px;position:sticky;top:0;z-index:100;box-shadow:0 1px 12px rgba(45,31,20,0.06)}
+.nav-brand{font-family:var(--font-head);font-size:1.35rem;font-weight:600;color:var(--text);letter-spacing:.01em;display:flex;align-items:center;gap:8px;font-style:italic;text-decoration:none}
+.nav-brand span{color:var(--accent);font-style:normal;font-weight:400}
+.nav-links{display:flex;gap:2px;margin-left:auto;align-items:center}
+.nav-link{padding:6px 14px;border-radius:20px;font-size:.8rem;font-weight:500;letter-spacing:.02em;text-transform:uppercase;color:var(--text3);transition:all .18s;cursor:pointer;text-decoration:none}
+.nav-link:hover{color:var(--text);background:var(--surface)}
+.nav-link.active{background:var(--accent);color:#fff}
+
+.main-content{flex:1;padding:36px 28px;max-width:860px;margin:0 auto;width:100%}
+
+.quiz-header{margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.quiz-category{font-size:.75rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.quiz-title{font-family:var(--font-head);font-size:2rem;font-weight:600;color:var(--text);font-style:italic;margin-bottom:8px}
+.quiz-meta{font-size:.85rem;color:var(--text3)}
+
+.quiz-container{max-width:700px}
+.quiz-question{margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.quiz-question:last-child{border-bottom:none}
+.quiz-stem{font-weight:500;margin-bottom:14px;line-height:1.7;font-size:.95rem;color:var(--text)}
+.quiz-option{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;cursor:pointer;transition:all .15s;font-size:.9rem;color:var(--text2)}
+.quiz-option:hover:not(.disabled){border-color:var(--accent);background:rgba(181,132,90,.05)}
+.quiz-option.selected{border-color:var(--accent);background:rgba(181,132,90,.08)}
+.quiz-option.correct{border-color:var(--green);background:rgba(107,143,113,.08);color:var(--green)}
+.quiz-option.incorrect{border-color:var(--red);background:rgba(176,80,80,.07);color:var(--red)}
+.quiz-option.disabled{cursor:not-allowed;opacity:.7}
+.quiz-option.show-correct{border-color:var(--green);background:rgba(107,143,113,.08)}
+.quiz-radio{width:18px;height:18px;border:1.5px solid var(--border2);border-radius:50%;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.quiz-radio.filled{background:var(--accent);border-color:var(--accent)}
+.quiz-radio.filled::after{content:'';width:6px;height:6px;border-radius:50%;background:#fff}
+.explanation-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin-top:10px;font-size:.875rem;color:var(--text2);line-height:1.7}
+
+.score-bar{position:sticky;bottom:0;background:var(--cream);border-top:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;z-index:50}
+.score-text{font-size:.9rem;color:var(--text2)}
+.score-text strong{color:var(--text);font-family:var(--font-head);font-size:1.1rem}
+.progress-bar{flex:1;max-width:300px;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;background:var(--green);transition:width .3s ease;width:0%}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 22px;border-radius:var(--radius-sm);font-size:.85rem;font-weight:500;letter-spacing:.03em;transition:all .18s;cursor:pointer;border:none}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:#a0733e;box-shadow:0 4px 12px rgba(181,132,90,.3)}
+.btn-outline{background:transparent;border:1px solid var(--border2);color:var(--text2)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+
+.results-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:32px;text-align:center;margin:32px 0}
+.results-score{font-family:var(--font-head);font-size:3rem;font-weight:700;color:var(--accent);margin-bottom:8px}
+.results-label{font-size:1rem;color:var(--text2);margin-bottom:16px}
+.results-bar{height:8px;background:var(--surface2);border-radius:4px;overflow:hidden;max-width:300px;margin:0 auto 16px}
+.results-fill{height:100%;border-radius:4px;transition:width .5s ease}
+
+@media(max-width:600px){
+  .main-content{padding:20px 16px}
+  .quiz-title{font-size:1.5rem}
+  .score-bar{padding:10px 16px;flex-wrap:wrap}
+  .app-nav{padding:0 16px}
+}
+</style>
+</head>
+<body>
+<nav class="app-nav">
+  <a class="nav-brand" href="../index.html">Psych<span>Curriculum</span></a>
+  <div class="nav-links">
+    <a class="nav-link" href="../index.html">Home</a>
+    <a class="nav-link active" href="index.html">Quizzes</a>
+  </div>
+</nav>
+<div class="main-content">
+  <div class="quiz-header">
+    <div class="quiz-category">Antidepressants</div>
+    <h1 class="quiz-title">Nutritional Psychiatry: Food as Medicine</h1>
+    <div class="quiz-meta"><span id="totalQ">10</span> questions</div>
+  </div>
+  <div class="quiz-container" id="quizBody">
+    <div class="quiz-question" id="q0">
+      <div class="quiz-stem">1. The Antidepressant Food Score (LaChance &amp; Ramsey) identified 12 antidepressant nutrients. Which of the following is NOT among them?</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 0)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> EPA and DHA</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 0)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Folate and zinc</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 0)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Lactose and sucrose</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 0)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Iron and magnesium</span>
+      </div>
+      <div class="explanation-box" style="display:none">The 12 antidepressant nutrients in the Antidepressant Food Score are: EPA, DHA, folate, iron, zinc, magnesium, potassium, vitamins B1, B6, B12, vitamin C, and vitamin A. These were identified based on their evidence for depression prevention or treatment. Lactose and sucrose are not included.</div>
+    </div>
+
+    <div class="quiz-question" id="q1">
+      <div class="quiz-stem">2. Between EPA and DHA omega-3 fatty acids, which has stronger meta-analytic evidence for antidepressant effects?</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 1)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> DHA — it is the primary structural fat in the brain</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 1)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> EPA — meta-analyses show benefit at ≥1 g EPA/day</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 1)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> They are completely equivalent</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 1)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Neither has any evidence</span>
+      </div>
+      <div class="explanation-box" style="display:none">EPA (eicosapentaenoic acid), not DHA, drives the antidepressant effect of omega-3 supplementation. Meta-analyses (including Sublette et al.) consistently support EPA ≥1 g/day for antidepressant effects. When recommending fish oil for depression, choose products with high EPA content (EPA:DHA ratio ≥2:1).</div>
+    </div>
+
+    <div class="quiz-question" id="q2">
+      <div class="quiz-stem">3. The SMILES trial demonstrated that a Mediterranean-style dietary intervention reduced MDD scores compared to social support control. The remission rate in the dietary group was approximately:</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 2)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> 5%</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 2)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> 15%</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 2)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> 32%</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 2)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> 60%</span>
+      </div>
+      <div class="explanation-box" style="display:none">The SMILES trial (Jacka et al., 2017) showed a 32% remission rate (MADRS criteria) in the Mediterranean diet group vs. 8% in the social support control group over 12 weeks. This 4× difference was statistically and clinically significant, establishing the dietary intervention as the first RCT evidence for diet as antidepressant treatment.</div>
+    </div>
+
+    <div class="quiz-question" id="q3">
+      <div class="quiz-stem">4. The gut-brain axis relates to depression because:</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 3)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Gut bacteria directly produce SSRIs</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 3)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> ~90% of serotonin is produced in the gut; microbiome diversity correlates inversely with anxiety/depression</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 3)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> The gut produces dopamine exclusively</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 3)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Gut pH affects antidepressant absorption only</span>
+      </div>
+      <div class="explanation-box" style="display:none">Approximately 90% of the body's serotonin is produced in the gut (by enterochromaffin cells) — though gut serotonin doesn't cross the blood-brain barrier, it influences gut motility and vagal signaling. Gut microbiome diversity inversely correlates with anxiety and depression severity, suggesting bidirectional gut-brain communication via vagal, hormonal, and immune pathways.</div>
+    </div>
+
+    <div class="quiz-question" id="q4">
+      <div class="quiz-stem">5. When screening a depressed patient for nutritional contributors, which lab panel is MOST clinically actionable?</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 4)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Full amino acid panel</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 4)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Ferritin, vitamin D (25-OH), B12, folate, TSH</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 4)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Omega-3 index only</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 4)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Serum zinc and copper</span>
+      </div>
+      <div class="explanation-box" style="display:none">The most clinically impactful nutritional screen is: ferritin/iron (iron deficiency causes fatigue and depression-like symptoms), vitamin D (deficiency linked to depression risk), B12 and folate (required for neurotransmitter synthesis — deficiency causes depressive symptoms), and TSH (hypothyroidism mimics depression). These are affordable, actionable, and commonly deficient.</div>
+    </div>
+
+    <div class="quiz-question" id="q5">
+      <div class="quiz-stem">6. Iron deficiency (even without anemia) in psychiatry is associated with which conditions?</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 5)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Schizophrenia and bipolar disorder</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 5)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> ADHD, restless legs syndrome, fatigue, and depression</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 5)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> OCD and PTSD only</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 5)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> No psychiatric conditions</span>
+      </div>
+      <div class="explanation-box" style="display:none">Iron deficiency (even with normal hemoglobin — 'non-anemic iron deficiency') impairs brain function. It is associated with ADHD (dopamine synthesis requires iron), restless legs syndrome, fatigue, cognitive impairment, and depressive symptoms. Ferritin (storage iron) is a more sensitive marker than hemoglobin for functional iron deficiency in psychiatric patients.</div>
+    </div>
+
+    <div class="quiz-question" id="q6">
+      <div class="quiz-stem">7. The EASe-GAD trial (LaChance) examined omega-3 fatty acids in which psychiatric condition?</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 6)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Schizophrenia</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 6)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Generalized anxiety disorder (GAD)</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 6)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> PTSD</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 6)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> OCD</span>
+      </div>
+      <div class="explanation-box" style="display:none">The EASe-GAD trial examined omega-3 supplementation (high EPA) for generalized anxiety disorder, finding significant reduction in anxiety severity compared to placebo. This extends the evidence for omega-3 beyond depression to anxiety disorders — consistent with the anti-inflammatory mechanism relevant to both conditions.</div>
+    </div>
+
+    <div class="quiz-question" id="q7">
+      <div class="quiz-stem">8. Which dietary pattern is associated with the HIGHEST risk of depression in epidemiological studies?</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 7)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Mediterranean diet</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 7)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> DASH diet</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 7)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Western diet (high processed food, refined sugar, trans fats)</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 7)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Vegetarian diet</span>
+      </div>
+      <div class="explanation-box" style="display:none">The Western dietary pattern — high in processed foods, refined carbohydrates, trans fats, and red/processed meat — is consistently associated with higher depression risk in observational studies. This pattern promotes systemic inflammation, reduces microbiome diversity, and is poor in antidepressant nutrients. The Mediterranean diet is associated with lowest depression risk.</div>
+    </div>
+
+    <div class="quiz-question" id="q8">
+      <div class="quiz-stem">9. Folate is important in psychiatry because it is required for:</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 8)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Direct serotonin synthesis</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 8)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> One-carbon metabolism → SAMe production → monoamine and myelin synthesis (methylation reactions)</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 8)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> GABA receptor modulation</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 8)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Insulin sensitivity</span>
+      </div>
+      <div class="explanation-box" style="display:none">Folate is essential for one-carbon metabolism, producing methyltetrahydrofolate (MTHF) → homocysteine → SAMe (S-adenosylmethionine). SAMe is the universal methyl donor for monoamine synthesis (serotonin, dopamine, norepinephrine) and myelin production. Folate deficiency impairs neurotransmitter synthesis and is associated with depression, especially in patients with MTHFR gene variants.</div>
+    </div>
+
+    <div class="quiz-question" id="q9">
+      <div class="quiz-stem">10. L-methylfolate (Deplin) is a prescription supplement used in psychiatry as:</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 9)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> A first-line antidepressant replacing SSRIs</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 9)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> An augmentation agent for antidepressants, particularly in patients with MTHFR variants or folate deficiency</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 9)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> A mood stabilizer for bipolar disorder</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 9)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> A weight loss supplement for antipsychotic-induced obesity</span>
+      </div>
+      <div class="explanation-box" style="display:none">L-methylfolate (the bioactive form of folate, bypassing MTHFR metabolism) is used as an augmentation agent for antidepressants. It is particularly relevant in patients with MTHFR gene variants (reduced ability to convert dietary folate to active form) or documented folate deficiency. Evidence shows improvement in antidepressant response when added to SSRIs/SNRIs.</div>
+    </div>
+  </div>
+  <div class="results-card" id="resultsCard" style="display:none">
+    <div class="results-score" id="finalScore">0%</div>
+    <div class="results-label" id="finalLabel">0 / 10 correct</div>
+    <div class="results-bar"><div class="results-fill" id="finalBar" style="width:0%;background:var(--green)"></div></div>
+    <button class="btn btn-primary" onclick="resetQuiz()" style="margin-top:12px">Retake Quiz</button>
+    <a class="btn btn-outline" href="index.html" style="margin-top:8px;display:inline-flex">Back to All Quizzes</a>
+  </div>
+</div>
+<div class="score-bar" id="scoreBar">
+  <div class="score-text">Score: <strong><span id="scoreNum">0</span> / 10</strong></div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <button class="btn btn-primary" id="finishBtn" onclick="finishQuiz()" style="display:none">View Results</button>
+</div>
+<script>
+let answered=0,correct=0,total=10;
+function selectOption(el,qi){
+  const q=document.getElementById('q'+qi);
+  if(q.classList.contains('answered'))return;
+  q.classList.add('answered');
+  const opts=q.querySelectorAll('.quiz-option');
+  const isCorrect=el.dataset.correct==='true';
+  opts.forEach(o=>{
+    o.classList.add('disabled');
+    if(o.dataset.correct==='true'){o.classList.add('show-correct');o.querySelector('.quiz-radio').classList.add('filled')}
+  });
+  if(isCorrect){el.classList.add('correct');correct++}
+  else{el.classList.add('incorrect')}
+  el.querySelector('.quiz-radio').classList.add('filled');
+  const expl=q.querySelector('.explanation-box');
+  if(expl&&expl.textContent.trim())expl.style.display='block';
+  answered++;
+  document.getElementById('scoreNum').textContent=correct;
+  document.getElementById('progressFill').style.width=(answered/total*100)+'%';
+  if(answered===total)document.getElementById('finishBtn').style.display='inline-flex';
+}
+function finishQuiz(){
+  const pct=Math.round(correct/total*100);
+  document.getElementById('finalScore').textContent=pct+'%';
+  document.getElementById('finalLabel').textContent=correct+' / '+total+' correct';
+  document.getElementById('finalBar').style.width=pct+'%';
+  if(pct>=80)document.getElementById('finalBar').style.background='var(--green)';
+  else if(pct>=60)document.getElementById('finalBar').style.background='var(--yellow)';
+  else document.getElementById('finalBar').style.background='var(--red)';
+  document.getElementById('resultsCard').style.display='block';
+  document.getElementById('resultsCard').scrollIntoView({behavior:'smooth'});
+}
+function resetQuiz(){
+  answered=0;correct=0;
+  document.querySelectorAll('.quiz-question').forEach(q=>{
+    q.classList.remove('answered');
+    q.querySelectorAll('.quiz-option').forEach(o=>{
+      o.classList.remove('disabled','correct','incorrect','selected','show-correct');
+      o.querySelector('.quiz-radio').classList.remove('filled');
+    });
+    const expl=q.querySelector('.explanation-box');
+    if(expl)expl.style.display='none';
+  });
+  document.getElementById('scoreNum').textContent='0';
+  document.getElementById('progressFill').style.width='0%';
+  document.getElementById('finishBtn').style.display='none';
+  document.getElementById('resultsCard').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>

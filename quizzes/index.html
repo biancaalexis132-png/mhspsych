@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Quiz Library – Psychiatry Curriculum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Jost:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:#faf8f5;--bg2:#ffffff;--bg3:#f5f0ea;--surface:#f0ebe3;--surface2:#e8dfd4;
+  --border:#ddd3c4;--border2:#c9b9a6;--text:#2d1f14;--text2:#6b5143;--text3:#9e8270;
+  --accent:#b5845a;--accent2:#c9956b;--green:#6b8f71;--yellow:#c49a3c;--red:#b05050;
+  --cream:#fdf9f4;--font-head:'Cormorant Garamond',Georgia,serif;
+  --font-body:'Jost',sans-serif;--font-mono:'DM Mono',monospace;
+  --radius:10px;--radius-sm:6px;--shadow:0 2px 16px rgba(45,31,20,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+a{color:var(--accent2);text-decoration:none}
+a:hover{color:var(--accent)}
+
+.top-bar{background:var(--cream);border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;height:64px;position:sticky;top:0;z-index:100;box-shadow:0 1px 12px rgba(45,31,20,0.06)}
+.top-brand{font-family:var(--font-head);font-size:1.35rem;font-weight:600;color:var(--text);font-style:italic}
+.top-brand span{color:var(--accent);font-style:normal}
+.top-bar a.back-link{margin-left:auto;font-size:.82rem;font-weight:500;color:var(--text3);padding:6px 14px;border-radius:20px;text-transform:uppercase;letter-spacing:.02em}
+.top-bar a.back-link:hover{color:var(--text);background:var(--surface)}
+
+.container{max-width:960px;margin:0 auto;padding:36px 28px 80px}
+.page-title{font-family:var(--font-head);font-size:2.2rem;font-weight:700;color:var(--text);margin-bottom:6px}
+.page-sub{color:var(--text3);font-size:.95rem;margin-bottom:36px}
+
+.category{margin-bottom:32px}
+.cat-label{font-family:var(--font-head);font-size:1.4rem;font-weight:600;color:var(--text);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.quiz-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.quiz-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;transition:all .18s;display:flex;flex-direction:column;gap:6px}
+.quiz-card:hover{border-color:var(--accent);box-shadow:var(--shadow);transform:translateY(-2px)}
+.quiz-card .q-title{font-family:var(--font-head);font-size:1.05rem;font-weight:600;color:var(--text)}
+.quiz-card .q-meta{font-size:.78rem;color:var(--text3)}
+.quiz-card .q-count{font-size:.78rem;color:var(--accent);font-weight:500}
+
+@media(max-width:600px){
+  .container{padding:20px 16px 60px}
+  .page-title{font-size:1.7rem}
+  .quiz-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-brand"><em>MHS</em>&nbsp;<span>Psych</span></div>
+  <a class="back-link" href="../index.html">← Main Site</a>
+</div>
+
+<div class="container">
+  <h1 class="page-title">Quiz Library</h1>
+  <p class="page-sub">Test your knowledge across all psychiatry topics. 63 quizzes, 630+ questions.</p>
+
+  <div class="category">
+    <h2 class="cat-label">Interviewing &amp; MSE</h2>
+    <div class="quiz-grid">
+      <a class="quiz-card" href="psychiatric-interview.html"><span class="q-title">The Psychiatric Interview</span><span class="q-meta">Structure &amp; Approach</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="mental-status-exam.html"><span class="q-title">Mental Status Examination (MSE)</span><span class="q-meta">Assessment</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="suicide-risk-assessment.html"><span class="q-title">Suicide Risk Assessment</span><span class="q-meta">Risk Assessment</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="diagnostic-formulation.html"><span class="q-title">Psychiatric Formulation &amp; Diagnosis</span><span class="q-meta">Formulation</span><span class="q-count">10 questions</span></a>
+    </div>
+  </div>
+
+  <div class="category">
+    <h2 class="cat-label">Antipsychotics</h2>
+    <div class="quiz-grid">
+      <a class="quiz-card" href="antipsychotics-overview.html"><span class="q-title">Antipsychotics: Mechanisms &amp; Classification</span><span class="q-meta">Overview</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="clozapine.html"><span class="q-title">Clozapine</span><span class="q-meta">Podcast Quiz</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="clozapine-deep-dive.html"><span class="q-title">Clozapine: The Gold Standard for TRS</span><span class="q-meta">Deep Dive</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="seroquel.html"><span class="q-title">Quetiapine (Seroquel)</span><span class="q-meta">Podcast Quiz</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="quetiapine-content.html"><span class="q-title">Quetiapine: The Versatile SGA</span><span class="q-meta">Lesson Quiz</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="zyprexa.html"><span class="q-title">Olanzapine (Zyprexa)</span><span class="q-meta">Podcast Quiz</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="olanzapine-content.html"><span class="q-title">Olanzapine: High Efficacy, High Metabolic Cost</span><span class="q-meta">Lesson Quiz</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="abilify.html"><span class="q-title">Aripiprazole (Abilify)</span><span class="q-meta">Podcast Quiz</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="rexulti.html"><span class="q-title">Brexpiprazole (Rexulti)</span><span class="q-meta">Podcast Quiz</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="cariprazine.html"><span class="q-title">Cariprazine (Vraylar)</span><span class="q-meta">Podcast Quiz</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="lumateperone.html"><span class="q-title">Lumateperone (Caplyta)</span><span class="q-meta">Podcast Quiz</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="latuda.html"><span class="q-title">Lurasidone (Latuda)</span><span class="q-meta">Podcast Quiz</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="geodon.html"><span class="q-title">Ziprasidone (Geodon)</span><span class="q-meta">Podcast Quiz</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="fluphenazine.html"><span class="q-title">Fluphenazine (Prolixin)</span><span class="q-meta">First-Gen</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="asenapine.html"><span class="q-title">Asenapine (Saphris/Secuado)</span><span class="q-meta">SGA</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="loxapine.html"><span class="q-title">Loxapine</span><span class="q-meta">FGA/Adasuve</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="symbyax.html"><span class="q-title">Symbyax (OFC)</span><span class="q-meta">Olanzapine + Fluoxetine</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="eps.html"><span class="q-title">Extrapyramidal Symptoms (EPS)</span><span class="q-meta">Podcast Quiz</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="eps-content.html"><span class="q-title">EPS &amp; Management</span><span class="q-meta">Lesson Quiz</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="antipsychotic-weight-gain.html"><span class="q-title">Antipsychotic Weight Gain</span><span class="q-meta">Podcast Quiz</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="antipsychotic-weight-content.html"><span class="q-title">Metabolic Syndrome Management</span><span class="q-meta">Lesson Quiz</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="metabolic-monitoring.html"><span class="q-title">Metabolic Monitoring &amp; QTc</span><span class="q-meta">Guidelines</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="lai-antipsychotics.html"><span class="q-title">Long-Acting Injectables (LAIs)</span><span class="q-meta">Formulations</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="antipsychotic-tdm.html"><span class="q-title">Antipsychotic Plasma Level Monitoring</span><span class="q-meta">TDM</span><span class="q-count">10 questions</span></a>
+    </div>
+  </div>
+
+  <div class="category">
+    <h2 class="cat-label">Antidepressants</h2>
+    <div class="quiz-grid">
+      <a class="quiz-card" href="antidepressants-overview.html"><span class="q-title">Antidepressants: Classes &amp; Mechanisms</span><span class="q-meta">Overview</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="ssris.html"><span class="q-title">SSRIs</span><span class="q-meta">Backbone of Antidepressant Therapy</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="snris.html"><span class="q-title">SNRIs</span><span class="q-meta">Venlafaxine, Duloxetine &amp; Desvenlafaxine</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="bupropion.html"><span class="q-title">Bupropion (Wellbutrin)</span><span class="q-meta">The Dopaminergic Antidepressant</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="mirtazapine.html"><span class="q-title">Mirtazapine (Remeron)</span><span class="q-meta">The NaSSA Antidepressant</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="tcas.html"><span class="q-title">TCAs</span><span class="q-meta">Podcast Quiz</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="tcas-content.html"><span class="q-title">TCAs: Legacy Agents</span><span class="q-meta">Lesson Quiz</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="maois.html"><span class="q-title">MAOIs</span><span class="q-meta">Podcast Quiz</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="maois-content.html"><span class="q-title">MAOIs: Powerful but High-Maintenance</span><span class="q-meta">Lesson Quiz</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="ketamine-esketamine.html"><span class="q-title">Ketamine &amp; Esketamine</span><span class="q-meta">Podcast Quiz</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="ketamine-esketamine-content.html"><span class="q-title">Ketamine &amp; Esketamine: Rapid-Acting</span><span class="q-meta">Lesson Quiz</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="novel-antidepressants.html"><span class="q-title">Novel Antidepressants</span><span class="q-meta">Auvelity, Pramipexole &amp; Nitrous Oxide</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="serotonin-syndrome.html"><span class="q-title">Serotonin Syndrome</span><span class="q-meta">Drug Interactions</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="discontinuation-syndrome.html"><span class="q-title">Discontinuation Syndrome</span><span class="q-meta">Antidepressants</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="depression-inflammation.html"><span class="q-title">Inflammation Hypothesis of Depression</span><span class="q-meta">Research</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="nutritional-psychiatry.html"><span class="q-title">Nutritional Psychiatry</span><span class="q-meta">Food as Medicine</span><span class="q-count">10 questions</span></a>
+    </div>
+  </div>
+
+  <div class="category">
+    <h2 class="cat-label">Mood Stabilizers</h2>
+    <div class="quiz-grid">
+      <a class="quiz-card" href="lithium.html"><span class="q-title">Lithium</span><span class="q-meta">The Gold Standard</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="valproate.html"><span class="q-title">Valproate (Depakote)</span><span class="q-meta">VPA</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="lamotrigine-carbamazepine.html"><span class="q-title">Lamotrigine &amp; Carbamazepine</span><span class="q-meta">Anticonvulsants</span><span class="q-count">10 questions</span></a>
+    </div>
+  </div>
+
+  <div class="category">
+    <h2 class="cat-label">Anxiolytics &amp; Sleep</h2>
+    <div class="quiz-grid">
+      <a class="quiz-card" href="benzodiazepines.html"><span class="q-title">Benzodiazepines</span><span class="q-meta">Pharmacology &amp; Risks</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="sleep-pharmacology.html"><span class="q-title">Sleep Pharmacology</span><span class="q-meta">Z-drugs, Trazodone &amp; More</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="h1-agonists-sleep.html"><span class="q-title">H1 Agonists for Sleep</span><span class="q-meta">Podcast Quiz</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="h1-antagonists.html"><span class="q-title">H1 Antagonists for Insomnia</span><span class="q-meta">Podcast Quiz</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="melatonin-ramelteon.html"><span class="q-title">Melatonin &amp; Ramelteon</span><span class="q-meta">Podcast Quiz</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="z-drugs.html"><span class="q-title">Z-Drugs</span><span class="q-meta">Zolpidem, Eszopiclone, Zaleplon</span><span class="q-count">10 questions</span></a>
+    </div>
+  </div>
+
+  <div class="category">
+    <h2 class="cat-label">Substance Use Disorders</h2>
+    <div class="quiz-grid">
+      <a class="quiz-card" href="withdrawal-syndromes.html"><span class="q-title">Withdrawal Syndromes</span><span class="q-meta">Life-Threatening vs. Uncomfortable</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="medication-assisted-treatment.html"><span class="q-title">Medication-Assisted Treatment</span><span class="q-meta">Buprenorphine, Methadone &amp; Naltrexone</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="stimulants-cannabis.html"><span class="q-title">Stimulants, Cannabis &amp; Co-occurring</span><span class="q-meta">Substance Use</span><span class="q-count">10 questions</span></a>
+    </div>
+  </div>
+
+  <div class="category">
+    <h2 class="cat-label">Psychiatric Emergencies</h2>
+    <div class="quiz-grid">
+      <a class="quiz-card" href="nms-catatonia.html"><span class="q-title">NMS &amp; Catatonia</span><span class="q-meta">Neuroleptic Malignant Syndrome</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="agitation-lithium-toxicity.html"><span class="q-title">Acute Agitation &amp; Lithium Toxicity</span><span class="q-meta">Psychiatric Holds</span><span class="q-count">10 questions</span></a>
+    </div>
+  </div>
+
+  <div class="category">
+    <h2 class="cat-label">Special Populations</h2>
+    <div class="quiz-grid">
+      <a class="quiz-card" href="pregnancy-psychiatry.html"><span class="q-title">Psychiatry in Pregnancy</span><span class="q-meta">Postpartum Period</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="geriatric-delirium.html"><span class="q-title">Geriatric Psychiatry</span><span class="q-meta">Delirium, Dementia &amp; Beers Criteria</span><span class="q-count">10 questions</span></a>
+      <a class="quiz-card" href="child-adolescent.html"><span class="q-title">Child &amp; Adolescent Psychiatry</span><span class="q-meta">Key Differences</span><span class="q-count">10 questions</span></a>
+    </div>
+  </div>
+
+  <div class="category">
+    <h2 class="cat-label">Other Topics</h2>
+    <div class="quiz-grid">
+      <a class="quiz-card" href="triple-network-model.html"><span class="q-title">Triple Network Model</span><span class="q-meta">Neuroscience</span><span class="q-count">20 questions</span></a>
+      <a class="quiz-card" href="si-prevention.html"><span class="q-title">Suicide Prevention</span><span class="q-meta">Podcast Quiz</span><span class="q-count">10 questions</span></a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

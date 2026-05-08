@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Psychiatric Formulation &amp; Diagnosis – Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Jost:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:#faf8f5;--bg2:#ffffff;--bg3:#f5f0ea;--surface:#f0ebe3;--surface2:#e8dfd4;
+  --border:#ddd3c4;--border2:#c9b9a6;--text:#2d1f14;--text2:#6b5143;--text3:#9e8270;
+  --accent:#b5845a;--accent2:#c9956b;--green:#6b8f71;--yellow:#c49a3c;--red:#b05050;
+  --purple:#7e6a9e;--cyan:#4d8a8a;--cream:#fdf9f4;
+  --font-head:'Cormorant Garamond',Georgia,serif;
+  --font-body:'Jost',sans-serif;
+  --font-mono:'DM Mono',monospace;
+  --radius:10px;--radius-sm:6px;
+  --shadow:0 2px 16px rgba(45,31,20,0.08);
+  --shadow-lg:0 6px 40px rgba(45,31,20,0.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+a{color:var(--accent2);text-decoration:none}
+button{cursor:pointer;font-family:var(--font-body);border:none;background:none;color:inherit}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.2}
+
+.app-nav{background:var(--cream);border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:16px;height:64px;position:sticky;top:0;z-index:100;box-shadow:0 1px 12px rgba(45,31,20,0.06)}
+.nav-brand{font-family:var(--font-head);font-size:1.35rem;font-weight:600;color:var(--text);letter-spacing:.01em;display:flex;align-items:center;gap:8px;font-style:italic;text-decoration:none}
+.nav-brand span{color:var(--accent);font-style:normal;font-weight:400}
+.nav-links{display:flex;gap:2px;margin-left:auto;align-items:center}
+.nav-link{padding:6px 14px;border-radius:20px;font-size:.8rem;font-weight:500;letter-spacing:.02em;text-transform:uppercase;color:var(--text3);transition:all .18s;cursor:pointer;text-decoration:none}
+.nav-link:hover{color:var(--text);background:var(--surface)}
+.nav-link.active{background:var(--accent);color:#fff}
+
+.main-content{flex:1;padding:36px 28px;max-width:860px;margin:0 auto;width:100%}
+
+.quiz-header{margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.quiz-category{font-size:.75rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.quiz-title{font-family:var(--font-head);font-size:2rem;font-weight:600;color:var(--text);font-style:italic;margin-bottom:8px}
+.quiz-meta{font-size:.85rem;color:var(--text3)}
+
+.quiz-container{max-width:700px}
+.quiz-question{margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.quiz-question:last-child{border-bottom:none}
+.quiz-stem{font-weight:500;margin-bottom:14px;line-height:1.7;font-size:.95rem;color:var(--text)}
+.quiz-option{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;cursor:pointer;transition:all .15s;font-size:.9rem;color:var(--text2)}
+.quiz-option:hover:not(.disabled){border-color:var(--accent);background:rgba(181,132,90,.05)}
+.quiz-option.selected{border-color:var(--accent);background:rgba(181,132,90,.08)}
+.quiz-option.correct{border-color:var(--green);background:rgba(107,143,113,.08);color:var(--green)}
+.quiz-option.incorrect{border-color:var(--red);background:rgba(176,80,80,.07);color:var(--red)}
+.quiz-option.disabled{cursor:not-allowed;opacity:.7}
+.quiz-option.show-correct{border-color:var(--green);background:rgba(107,143,113,.08)}
+.quiz-radio{width:18px;height:18px;border:1.5px solid var(--border2);border-radius:50%;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.quiz-radio.filled{background:var(--accent);border-color:var(--accent)}
+.quiz-radio.filled::after{content:'';width:6px;height:6px;border-radius:50%;background:#fff}
+.explanation-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin-top:10px;font-size:.875rem;color:var(--text2);line-height:1.7}
+
+.score-bar{position:sticky;bottom:0;background:var(--cream);border-top:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;z-index:50}
+.score-text{font-size:.9rem;color:var(--text2)}
+.score-text strong{color:var(--text);font-family:var(--font-head);font-size:1.1rem}
+.progress-bar{flex:1;max-width:300px;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;background:var(--green);transition:width .3s ease;width:0%}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 22px;border-radius:var(--radius-sm);font-size:.85rem;font-weight:500;letter-spacing:.03em;transition:all .18s;cursor:pointer;border:none}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:#a0733e;box-shadow:0 4px 12px rgba(181,132,90,.3)}
+.btn-outline{background:transparent;border:1px solid var(--border2);color:var(--text2)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+
+.results-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:32px;text-align:center;margin:32px 0}
+.results-score{font-family:var(--font-head);font-size:3rem;font-weight:700;color:var(--accent);margin-bottom:8px}
+.results-label{font-size:1rem;color:var(--text2);margin-bottom:16px}
+.results-bar{height:8px;background:var(--surface2);border-radius:4px;overflow:hidden;max-width:300px;margin:0 auto 16px}
+.results-fill{height:100%;border-radius:4px;transition:width .5s ease}
+
+@media(max-width:600px){
+  .main-content{padding:20px 16px}
+  .quiz-title{font-size:1.5rem}
+  .score-bar{padding:10px 16px;flex-wrap:wrap}
+  .app-nav{padding:0 16px}
+}
+</style>
+</head>
+<body>
+<nav class="app-nav">
+  <a class="nav-brand" href="../index.html">Psych<span>Curriculum</span></a>
+  <div class="nav-links">
+    <a class="nav-link" href="../index.html">Home</a>
+    <a class="nav-link active" href="index.html">Quizzes</a>
+  </div>
+</nav>
+<div class="main-content">
+  <div class="quiz-header">
+    <div class="quiz-category">Interviewing &amp; MSE</div>
+    <h1 class="quiz-title">Psychiatric Formulation &amp; Diagnosis</h1>
+    <div class="quiz-meta"><span id="totalQ">10</span> questions</div>
+  </div>
+  <div class="quiz-container" id="quizBody">
+    <div class="quiz-question" id="q0">
+      <div class="quiz-stem">1. In the 4 P's framework, which category best describes childhood trauma that increases vulnerability to depression in adulthood?</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 0)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Precipitating</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 0)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Perpetuating</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 0)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Predisposing</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 0)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Protective</span>
+      </div>
+      <div class="explanation-box" style="display:none">Predisposing factors are those that create vulnerability before the current episode — they increase susceptibility. Childhood trauma is a classic predisposing factor. Precipitating factors are the proximate triggers of the current episode (e.g., recent job loss). Perpetuating factors maintain the current problem (e.g., ongoing substance use). Protective factors are strengths that mitigate risk.</div>
+    </div>
+
+    <div class="quiz-question" id="q1">
+      <div class="quiz-stem">2. Which of the following belong in the BIOLOGICAL domain of a biopsychosocial formulation? (Select all that apply)</div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 1)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Family history of bipolar disorder</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 1)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Current heavy alcohol use</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 1)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Unemployment</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 1)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Hypothyroidism</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 1)">
+        <div class="quiz-radio"></div>
+        <span><strong>E.</strong> Negative cognitive distortions</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 1)">
+        <div class="quiz-radio"></div>
+        <span><strong>F.</strong> Use of prednisone causing mood changes</span>
+      </div>
+      <div class="explanation-box" style="display:none">Biological factors include genetics (family history of bipolar), substance use (alcohol), medical conditions (hypothyroidism), and medications with psychiatric effects (prednisone). Unemployment is social. Negative cognitive distortions are psychological. The biopsychosocial model helps ensure no domain is overlooked in diagnosis and treatment planning.</div>
+    </div>
+
+    <div class="quiz-question" id="q2">
+      <div class="quiz-stem">3. A 22-year-old presents with new psychosis. Before diagnosing schizophrenia, which should be ruled out FIRST?</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 2)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Bipolar disorder with psychotic features</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 2)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Medical causes including thyroid disease, CNS infection, substance use</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 2)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Major depressive disorder with psychotic features</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 2)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Schizoaffective disorder</span>
+      </div>
+      <div class="explanation-box" style="display:none">First-episode psychosis requires medical workup to exclude treatable causes before attributing to a primary psychotic disorder. This includes TSH, CBC, CMP, B12, RPR/VDRL, HIV, urine drug screen, and neuroimaging in many cases. Medical causes of psychosis include thyroid disorders, autoimmune encephalitis, CNS infections, substance intoxication/withdrawal, and many others. Bipolar and MDD with psychosis are important psychiatric differential diagnoses but are ruled out after medical causes.</div>
+    </div>
+
+    <div class="quiz-question" id="q3">
+      <div class="quiz-stem">4. The MOST important reason to include protective factors in a psychiatric formulation is:</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 3)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> They are required by Joint Commission for documentation</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 3)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> They identify strengths that can be leveraged in treatment and affect prognosis</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 3)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> They reduce the clinician's liability if a patient harms themselves</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 3)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> They are only relevant for suicide risk assessment</span>
+      </div>
+      <div class="explanation-box" style="display:none">Protective factors are clinically meaningful because they identify existing strengths and resources that can be leveraged in treatment. Strong social support, reasons for living, engagement with treatment, and spiritual beliefs all influence prognosis and can be emphasized and built upon therapeutically. Protective factors are relevant across all psychiatric conditions, not just suicide risk.</div>
+    </div>
+
+    <div class="quiz-question" id="q4">
+      <div class="quiz-stem">5. Comorbidity (more than one psychiatric diagnosis) in psychiatry is BEST described as:</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 4)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> A diagnostic error — most patients should receive only one primary diagnosis</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 4)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Common and expected, as psychiatric conditions frequently co-occur</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 4)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> A sign that the clinician has not been sufficiently thorough in ruling out diagnoses</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 4)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Only relevant for personality disorders</span>
+      </div>
+      <div class="explanation-box" style="display:none">Comorbidity is the rule in psychiatry. Anxiety and depression co-occur in over 50% of cases. Substance use disorders are present in a large percentage of patients with mood and psychotic disorders. Trauma history underlies many conditions. ADHD often co-exists with mood and anxiety disorders. Recognizing and treating comorbidities is essential to effective psychiatric care.</div>
+    </div>
+
+    <div class="quiz-question" id="q5">
+      <div class="quiz-stem">6. For Darius (42M, second manic episode, stopped lithium 6 weeks ago), which factor is BEST categorized as 'precipitating'?</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 5)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Bipolar I disorder (genetic predisposition)</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 5)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Lithium discontinuation 6 weeks ago</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 5)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Childhood with an unpredictable father</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 5)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Unemployment and social isolation</span>
+      </div>
+      <div class="explanation-box" style="display:none">Precipitating factors are the proximal triggers for the current episode. Lithium discontinuation is the most direct precipitant of his breakthrough mania. Genetic predisposition is predisposing. Childhood adversity is predisposing/psychological. Unemployment may be perpetuating.</div>
+    </div>
+
+    <div class="quiz-question" id="q6">
+      <div class="quiz-stem">7. Which of the following is a PROTECTIVE factor in Darius's formulation?</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 6)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Prior psychiatric hospitalization</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 6)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> History of medication adherence (until 6 weeks ago)</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 6)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Divorced</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 6)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Unemployed</span>
+      </div>
+      <div class="explanation-box" style="display:none">Protective factors mitigate risk and support recovery. Prior medication adherence (even if recently disrupted) suggests capacity for engagement with treatment. Hospitalization, divorce, and unemployment are risk factors or context — not protective.</div>
+    </div>
+
+    <div class="quiz-question" id="q7">
+      <div class="quiz-stem">8. In a biopsychosocial formulation, which of the following belong in the BIOLOGICAL domain? Select ALL that apply.</div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 7)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Genetic predisposition to bipolar disorder</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 7)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Attachment style from childhood</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 7)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Traumatic brain injury at age 18</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 7)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Ongoing polysubstance use</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 7)">
+        <div class="quiz-radio"></div>
+        <span><strong>E.</strong> Internalized shame from family stigma</span>
+      </div>
+      <div class="explanation-box" style="display:none">Biological: genetics, neurological insults (TBI), substance use (pharmacological effects). Psychological: attachment, cognitive patterns, coping styles, internalized beliefs (shame). Social: family dynamics, housing, employment, cultural factors.</div>
+    </div>
+
+    <div class="quiz-question" id="q8">
+      <div class="quiz-stem">9. When writing a psychiatric formulation, which statement is MOST accurate?</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 8)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> The formulation replaces the DSM diagnosis.</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 8)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> The formulation provides a narrative explanation of why this person has this problem at this time.</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 8)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> The formulation is completed once and rarely updated.</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 8)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> The formulation is a list of diagnoses and medications.</span>
+      </div>
+      <div class="explanation-box" style="display:none">A psychiatric formulation is a personalized, dynamic narrative that contextualizes the diagnosis — explaining the unique interplay of factors in THIS patient. It answers WHY (not just WHAT). It should be updated as new information emerges.</div>
+    </div>
+
+    <div class="quiz-question" id="q9">
+      <div class="quiz-stem">10. Darius asks: 'Do I really have bipolar disorder? My last doctor said it might just be depression.' How do you BEST respond?</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 9)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> &quot;Your last doctor was wrong — you clearly have bipolar disorder.&quot;</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 9)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> &quot;That's a fair question. Let me walk you through what distinguishes a manic episode from depression, and we can look at your history together.&quot;</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 9)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> &quot;The diagnosis doesn't matter — what matters is that you take your medication.&quot;</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 9)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> &quot;I agree with the other doctor — mood disorders are hard to classify.&quot;</span>
+      </div>
+      <div class="explanation-box" style="display:none">Engaging the patient in diagnostic reasoning promotes insight, alliance, and adherence. Dismissing the previous clinician (A) damages trust. 'The diagnosis doesn't matter' (C) is clinically incorrect — it directly affects medication choice and prognosis. Agreeing without examination (D) is clinically irresponsible.</div>
+    </div>
+  </div>
+  <div class="results-card" id="resultsCard" style="display:none">
+    <div class="results-score" id="finalScore">0%</div>
+    <div class="results-label" id="finalLabel">0 / 10 correct</div>
+    <div class="results-bar"><div class="results-fill" id="finalBar" style="width:0%;background:var(--green)"></div></div>
+    <button class="btn btn-primary" onclick="resetQuiz()" style="margin-top:12px">Retake Quiz</button>
+    <a class="btn btn-outline" href="index.html" style="margin-top:8px;display:inline-flex">Back to All Quizzes</a>
+  </div>
+</div>
+<div class="score-bar" id="scoreBar">
+  <div class="score-text">Score: <strong><span id="scoreNum">0</span> / 10</strong></div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <button class="btn btn-primary" id="finishBtn" onclick="finishQuiz()" style="display:none">View Results</button>
+</div>
+<script>
+let answered=0,correct=0,total=10;
+function selectOption(el,qi){
+  const q=document.getElementById('q'+qi);
+  if(q.classList.contains('answered'))return;
+  q.classList.add('answered');
+  const opts=q.querySelectorAll('.quiz-option');
+  const isCorrect=el.dataset.correct==='true';
+  opts.forEach(o=>{
+    o.classList.add('disabled');
+    if(o.dataset.correct==='true'){o.classList.add('show-correct');o.querySelector('.quiz-radio').classList.add('filled')}
+  });
+  if(isCorrect){el.classList.add('correct');correct++}
+  else{el.classList.add('incorrect')}
+  el.querySelector('.quiz-radio').classList.add('filled');
+  const expl=q.querySelector('.explanation-box');
+  if(expl&&expl.textContent.trim())expl.style.display='block';
+  answered++;
+  document.getElementById('scoreNum').textContent=correct;
+  document.getElementById('progressFill').style.width=(answered/total*100)+'%';
+  if(answered===total)document.getElementById('finishBtn').style.display='inline-flex';
+}
+function finishQuiz(){
+  const pct=Math.round(correct/total*100);
+  document.getElementById('finalScore').textContent=pct+'%';
+  document.getElementById('finalLabel').textContent=correct+' / '+total+' correct';
+  document.getElementById('finalBar').style.width=pct+'%';
+  if(pct>=80)document.getElementById('finalBar').style.background='var(--green)';
+  else if(pct>=60)document.getElementById('finalBar').style.background='var(--yellow)';
+  else document.getElementById('finalBar').style.background='var(--red)';
+  document.getElementById('resultsCard').style.display='block';
+  document.getElementById('resultsCard').scrollIntoView({behavior:'smooth'});
+}
+function resetQuiz(){
+  answered=0;correct=0;
+  document.querySelectorAll('.quiz-question').forEach(q=>{
+    q.classList.remove('answered');
+    q.querySelectorAll('.quiz-option').forEach(o=>{
+      o.classList.remove('disabled','correct','incorrect','selected','show-correct');
+      o.querySelector('.quiz-radio').classList.remove('filled');
+    });
+    const expl=q.querySelector('.explanation-box');
+    if(expl)expl.style.display='none';
+  });
+  document.getElementById('scoreNum').textContent='0';
+  document.getElementById('progressFill').style.width='0%';
+  document.getElementById('finishBtn').style.display='none';
+  document.getElementById('resultsCard').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Extrapyramidal Side Effects (EPS) &amp; Management – Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Jost:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:#faf8f5;--bg2:#ffffff;--bg3:#f5f0ea;--surface:#f0ebe3;--surface2:#e8dfd4;
+  --border:#ddd3c4;--border2:#c9b9a6;--text:#2d1f14;--text2:#6b5143;--text3:#9e8270;
+  --accent:#b5845a;--accent2:#c9956b;--green:#6b8f71;--yellow:#c49a3c;--red:#b05050;
+  --purple:#7e6a9e;--cyan:#4d8a8a;--cream:#fdf9f4;
+  --font-head:'Cormorant Garamond',Georgia,serif;
+  --font-body:'Jost',sans-serif;
+  --font-mono:'DM Mono',monospace;
+  --radius:10px;--radius-sm:6px;
+  --shadow:0 2px 16px rgba(45,31,20,0.08);
+  --shadow-lg:0 6px 40px rgba(45,31,20,0.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+a{color:var(--accent2);text-decoration:none}
+button{cursor:pointer;font-family:var(--font-body);border:none;background:none;color:inherit}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.2}
+
+.app-nav{background:var(--cream);border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:16px;height:64px;position:sticky;top:0;z-index:100;box-shadow:0 1px 12px rgba(45,31,20,0.06)}
+.nav-brand{font-family:var(--font-head);font-size:1.35rem;font-weight:600;color:var(--text);letter-spacing:.01em;display:flex;align-items:center;gap:8px;font-style:italic;text-decoration:none}
+.nav-brand span{color:var(--accent);font-style:normal;font-weight:400}
+.nav-links{display:flex;gap:2px;margin-left:auto;align-items:center}
+.nav-link{padding:6px 14px;border-radius:20px;font-size:.8rem;font-weight:500;letter-spacing:.02em;text-transform:uppercase;color:var(--text3);transition:all .18s;cursor:pointer;text-decoration:none}
+.nav-link:hover{color:var(--text);background:var(--surface)}
+.nav-link.active{background:var(--accent);color:#fff}
+
+.main-content{flex:1;padding:36px 28px;max-width:860px;margin:0 auto;width:100%}
+
+.quiz-header{margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.quiz-category{font-size:.75rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.quiz-title{font-family:var(--font-head);font-size:2rem;font-weight:600;color:var(--text);font-style:italic;margin-bottom:8px}
+.quiz-meta{font-size:.85rem;color:var(--text3)}
+
+.quiz-container{max-width:700px}
+.quiz-question{margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.quiz-question:last-child{border-bottom:none}
+.quiz-stem{font-weight:500;margin-bottom:14px;line-height:1.7;font-size:.95rem;color:var(--text)}
+.quiz-option{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;cursor:pointer;transition:all .15s;font-size:.9rem;color:var(--text2)}
+.quiz-option:hover:not(.disabled){border-color:var(--accent);background:rgba(181,132,90,.05)}
+.quiz-option.selected{border-color:var(--accent);background:rgba(181,132,90,.08)}
+.quiz-option.correct{border-color:var(--green);background:rgba(107,143,113,.08);color:var(--green)}
+.quiz-option.incorrect{border-color:var(--red);background:rgba(176,80,80,.07);color:var(--red)}
+.quiz-option.disabled{cursor:not-allowed;opacity:.7}
+.quiz-option.show-correct{border-color:var(--green);background:rgba(107,143,113,.08)}
+.quiz-radio{width:18px;height:18px;border:1.5px solid var(--border2);border-radius:50%;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.quiz-radio.filled{background:var(--accent);border-color:var(--accent)}
+.quiz-radio.filled::after{content:'';width:6px;height:6px;border-radius:50%;background:#fff}
+.explanation-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin-top:10px;font-size:.875rem;color:var(--text2);line-height:1.7}
+
+.score-bar{position:sticky;bottom:0;background:var(--cream);border-top:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;z-index:50}
+.score-text{font-size:.9rem;color:var(--text2)}
+.score-text strong{color:var(--text);font-family:var(--font-head);font-size:1.1rem}
+.progress-bar{flex:1;max-width:300px;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;background:var(--green);transition:width .3s ease;width:0%}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 22px;border-radius:var(--radius-sm);font-size:.85rem;font-weight:500;letter-spacing:.03em;transition:all .18s;cursor:pointer;border:none}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:#a0733e;box-shadow:0 4px 12px rgba(181,132,90,.3)}
+.btn-outline{background:transparent;border:1px solid var(--border2);color:var(--text2)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+
+.results-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:32px;text-align:center;margin:32px 0}
+.results-score{font-family:var(--font-head);font-size:3rem;font-weight:700;color:var(--accent);margin-bottom:8px}
+.results-label{font-size:1rem;color:var(--text2);margin-bottom:16px}
+.results-bar{height:8px;background:var(--surface2);border-radius:4px;overflow:hidden;max-width:300px;margin:0 auto 16px}
+.results-fill{height:100%;border-radius:4px;transition:width .5s ease}
+
+@media(max-width:600px){
+  .main-content{padding:20px 16px}
+  .quiz-title{font-size:1.5rem}
+  .score-bar{padding:10px 16px;flex-wrap:wrap}
+  .app-nav{padding:0 16px}
+}
+</style>
+</head>
+<body>
+<nav class="app-nav">
+  <a class="nav-brand" href="../index.html">Psych<span>Curriculum</span></a>
+  <div class="nav-links">
+    <a class="nav-link" href="../index.html">Home</a>
+    <a class="nav-link active" href="index.html">Quizzes</a>
+  </div>
+</nav>
+<div class="main-content">
+  <div class="quiz-header">
+    <div class="quiz-category">Antipsychotics</div>
+    <h1 class="quiz-title">Extrapyramidal Side Effects (EPS) &amp; Management</h1>
+    <div class="quiz-meta"><span id="totalQ">10</span> questions</div>
+  </div>
+  <div class="quiz-container" id="quizBody">
+    <div class="quiz-question" id="q0">
+      <div class="quiz-stem">1. A 19-year-old male receives haloperidol 5mg IM for acute agitation. Two hours later, his neck is twisted to one side and his eyes are deviated upward. He is distressed. What is the MOST appropriate immediate treatment?</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 0)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Repeat haloperidol 5mg IM</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 0)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Lorazepam 2mg PO</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 0)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Benztropine 1-2mg IM or IV</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 0)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Propranolol 20-40mg PO</span>
+      </div>
+      <div class="explanation-box" style="display:none">This presentation — torticollis (neck twisted) and oculogyric crisis (eyes deviated upward) occurring hours after an antipsychotic — is classic acute dystonia. It is treated immediately with an anticholinergic: benztropine (Cogentin) 1-2mg IM/IV or diphenhydramine (Benadryl) 25-50mg IM/IV. Response is typically rapid. Propranolol treats akathisia. Benzodiazepines can help with agitation but not dystonia. More haloperidol would worsen EPS.</div>
+    </div>
+
+    <div class="quiz-question" id="q1">
+      <div class="quiz-stem">2. A patient started on risperidone 2 weeks ago reports feeling unable to sit still, an inner sense of restlessness, and pacing constantly. He says it's worse than his psychosis. What is the MOST likely diagnosis?</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 1)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Worsening psychosis</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 1)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Generalized anxiety disorder</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 1)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Akathisia</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 1)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Restless legs syndrome</span>
+      </div>
+      <div class="explanation-box" style="display:none">Akathisia is characterized by subjective inner restlessness with an urge to move, typically developing days to weeks after starting or increasing an antipsychotic. It is frequently mistaken for anxiety or psychotic agitation, leading to dose increases that worsen the condition. First-line treatment options include reducing the antipsychotic dose, propranolol 10-40mg BID-TID, low-dose benzodiazepine, or mirtazapine.</div>
+    </div>
+
+    <div class="quiz-question" id="q2">
+      <div class="quiz-stem">3. A patient on haloperidol decanoate for 3 years develops repetitive lip smacking and tongue movements that persist even when you ask them to stop. Which of the following are appropriate management options? (Select all that apply)</div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 2)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Switch to clozapine</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 2)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Increase haloperidol dose — this will suppress the movements</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 2)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Initiate valbenazine (Ingrezza)</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 2)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Initiate deutetrabenazine (Austedo)</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 2)">
+        <div class="quiz-radio"></div>
+        <span><strong>E.</strong> Switch to quetiapine at lowest effective dose</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 2)">
+        <div class="quiz-radio"></div>
+        <span><strong>F.</strong> Add benztropine — this is the first-line treatment for TD</span>
+      </div>
+      <div class="explanation-box" style="display:none">Tardive dyskinesia (TD) presents as involuntary, repetitive movements (especially orofacial) after months-years of antipsychotic exposure. Management: (1) Switch to lowest-EPS agent: clozapine (reduces TD) or quetiapine at low doses. (2) FDA-approved VMAT2 inhibitors: valbenazine and deutetrabenazine. Increasing the antipsychotic dose may temporarily suppress movements but worsens long-term TD. Anticholinergics (benztropine) actually worsen TD.</div>
+    </div>
+
+    <div class="quiz-question" id="q3">
+      <div class="quiz-stem">4. Which of the following are features of Neuroleptic Malignant Syndrome (NMS)? (Select all that apply)</div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 3)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Hyperthermia</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 3)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Lead-pipe muscle rigidity</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 3)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Markedly elevated creatine kinase (CK)</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 3)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Rapid onset within hours of drug exposure</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 3)">
+        <div class="quiz-radio"></div>
+        <span><strong>E.</strong> Autonomic instability (tachycardia, labile BP, diaphoresis)</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 3)">
+        <div class="quiz-radio"></div>
+        <span><strong>F.</strong> Clonus and hyperreflexia</span>
+      </div>
+      <div class="explanation-box" style="display:none">NMS is characterized by the tetrad: hyperthermia, lead-pipe rigidity, altered mental status, and autonomic instability. Laboratory findings include markedly elevated CK (from muscle breakdown), leukocytosis, and myoglobinuria. NMS typically develops over days (not hours) after dopamine antagonist exposure. Clonus and hyperreflexia are characteristic of serotonin syndrome (not NMS). Immediate management: stop the offending agent, supportive care, bromocriptine/amantadine, dantrolene.</div>
+    </div>
+
+    <div class="quiz-question" id="q4">
+      <div class="quiz-stem">5. Which of the following BEST distinguishes NMS from serotonin syndrome?</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 4)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Hyperthermia is present in NMS but not in serotonin syndrome</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 4)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> NMS has lead-pipe rigidity and elevated CK; serotonin syndrome has hyperreflexia/clonus and rapid onset</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 4)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Serotonin syndrome only occurs with MAOIs, not SSRIs</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 4)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> NMS typically resolves within hours; serotonin syndrome takes weeks</span>
+      </div>
+      <div class="explanation-box" style="display:none">NMS vs. serotonin syndrome is a classic distinction: NMS features lead-pipe rigidity, markedly elevated CK, slower onset (days), and decreased bowel sounds. Serotonin syndrome features clonus, hyperreflexia, rapid onset (hours), hyperactive bowel sounds, and tremor. Both can have hyperthermia. Serotonin syndrome occurs with any serotonergic agent (SSRIs, SNRIs, MAOIs, triptans, tramadol, linezolid). Treatment differs: NMS requires bromocriptine/dantrolene; serotonin syndrome requires cyproheptadine and/or benzodiazepines.</div>
+    </div>
+
+    <div class="quiz-question" id="q5">
+      <div class="quiz-stem">6. Kevin (19M) has acute dystonia after haloperidol 5mg IM. What is the IMMEDIATE treatment?</div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 5)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Benztropine 1-2mg IM or IV</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 5)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Diphenhydramine 25mg PO</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 5)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Propranolol 10mg PO</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 5)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Lorazepam 1mg PO</span>
+      </div>
+      <div class="explanation-box" style="display:none">Acute dystonia requires anticholinergic treatment — benztropine 1-2mg IM/IV or diphenhydramine 25-50mg IM/IV. Both work rapidly (5-15 min). Oral route is too slow for acute dystonia. Propranolol treats akathisia, not dystonia. Lorazepam has limited role in acute dystonia.</div>
+    </div>
+
+    <div class="quiz-question" id="q6">
+      <div class="quiz-stem">7. A patient on olanzapine complains of 'restlessness — I can't stop moving my legs even when I sit.' Vital signs normal. No rigidity. This MOST likely represents:</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 6)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Tardive dyskinesia</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 6)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Parkinsonism</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 6)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Akathisia</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 6)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Neuroleptic malignant syndrome</span>
+      </div>
+      <div class="explanation-box" style="display:none">Akathisia = subjective restlessness + objective motor restlessness (pacing, fidgeting, inability to sit still). It is NOT distress from the psychiatric condition itself — clarify this history carefully. Akathisia is a leading cause of medication nonadherence and, in severe cases, has been associated with suicidality.</div>
+    </div>
+
+    <div class="quiz-question" id="q7">
+      <div class="quiz-stem">8. A patient on haloperidol for 8 years develops involuntary repetitive mouth movements and tongue protrusions that persist even when medication is briefly held. This is MOST consistent with:</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 7)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Acute dystonia</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 7)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Drug-induced parkinsonism</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 7)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Tardive dyskinesia</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 7)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Akathisia</span>
+      </div>
+      <div class="explanation-box" style="display:none">Tardive dyskinesia (TD) = involuntary, repetitive, choreiform movements — typically orofacial (lip smacking, tongue protrusion, chewing). Classic triad: develops after months-years of antipsychotic use, persists after stopping, and often worsens on dose reduction. Unlike acute EPS, TD may be permanent.</div>
+    </div>
+
+    <div class="quiz-question" id="q8">
+      <div class="quiz-stem">9. What is the FDA-approved treatment for tardive dyskinesia?</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 8)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Benztropine</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 8)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Valbenazine or deutetrabenazine (VMAT2 inhibitors)</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 8)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Propranolol</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 8)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Clonazepam</span>
+      </div>
+      <div class="explanation-box" style="display:none">Valbenazine (Ingrezza) and deutetrabenazine (Austedo) — VMAT2 inhibitors that deplete presynaptic dopamine — are FDA-approved for TD. They are not cures but reduce severity. Benztropine treats acute dystonia/parkinsonism. Clonazepam may offer mild symptom relief but is not FDA-approved for TD.</div>
+    </div>
+
+    <div class="quiz-question" id="q9">
+      <div class="quiz-stem">10. Which of the following are TRUE regarding drug-induced parkinsonism (DIP)? Select ALL that apply.</div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 9)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Typically appears within days to weeks of starting or increasing an antipsychotic</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 9)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Presents with tremor, rigidity, and bradykinesia</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 9)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Always resolves when the antipsychotic is stopped</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 9)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Treated with anticholinergics (benztropine, trihexyphenidyl)</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 9)">
+        <div class="quiz-radio"></div>
+        <span><strong>E.</strong> Occurs more commonly with high-potency FGAs</span>
+      </div>
+      <div class="explanation-box" style="display:none">DIP typically appears early (days-weeks), is treated with anticholinergics, and is more common with high-potency FGAs. It does NOT always resolve — in some patients, especially elderly, it may unmask underlying Parkinson's disease that persists after medication discontinuation.</div>
+    </div>
+  </div>
+  <div class="results-card" id="resultsCard" style="display:none">
+    <div class="results-score" id="finalScore">0%</div>
+    <div class="results-label" id="finalLabel">0 / 10 correct</div>
+    <div class="results-bar"><div class="results-fill" id="finalBar" style="width:0%;background:var(--green)"></div></div>
+    <button class="btn btn-primary" onclick="resetQuiz()" style="margin-top:12px">Retake Quiz</button>
+    <a class="btn btn-outline" href="index.html" style="margin-top:8px;display:inline-flex">Back to All Quizzes</a>
+  </div>
+</div>
+<div class="score-bar" id="scoreBar">
+  <div class="score-text">Score: <strong><span id="scoreNum">0</span> / 10</strong></div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <button class="btn btn-primary" id="finishBtn" onclick="finishQuiz()" style="display:none">View Results</button>
+</div>
+<script>
+let answered=0,correct=0,total=10;
+function selectOption(el,qi){
+  const q=document.getElementById('q'+qi);
+  if(q.classList.contains('answered'))return;
+  q.classList.add('answered');
+  const opts=q.querySelectorAll('.quiz-option');
+  const isCorrect=el.dataset.correct==='true';
+  opts.forEach(o=>{
+    o.classList.add('disabled');
+    if(o.dataset.correct==='true'){o.classList.add('show-correct');o.querySelector('.quiz-radio').classList.add('filled')}
+  });
+  if(isCorrect){el.classList.add('correct');correct++}
+  else{el.classList.add('incorrect')}
+  el.querySelector('.quiz-radio').classList.add('filled');
+  const expl=q.querySelector('.explanation-box');
+  if(expl&&expl.textContent.trim())expl.style.display='block';
+  answered++;
+  document.getElementById('scoreNum').textContent=correct;
+  document.getElementById('progressFill').style.width=(answered/total*100)+'%';
+  if(answered===total)document.getElementById('finishBtn').style.display='inline-flex';
+}
+function finishQuiz(){
+  const pct=Math.round(correct/total*100);
+  document.getElementById('finalScore').textContent=pct+'%';
+  document.getElementById('finalLabel').textContent=correct+' / '+total+' correct';
+  document.getElementById('finalBar').style.width=pct+'%';
+  if(pct>=80)document.getElementById('finalBar').style.background='var(--green)';
+  else if(pct>=60)document.getElementById('finalBar').style.background='var(--yellow)';
+  else document.getElementById('finalBar').style.background='var(--red)';
+  document.getElementById('resultsCard').style.display='block';
+  document.getElementById('resultsCard').scrollIntoView({behavior:'smooth'});
+}
+function resetQuiz(){
+  answered=0;correct=0;
+  document.querySelectorAll('.quiz-question').forEach(q=>{
+    q.classList.remove('answered');
+    q.querySelectorAll('.quiz-option').forEach(o=>{
+      o.classList.remove('disabled','correct','incorrect','selected','show-correct');
+      o.querySelector('.quiz-radio').classList.remove('filled');
+    });
+    const expl=q.querySelector('.explanation-box');
+    if(expl)expl.style.display='none';
+  });
+  document.getElementById('scoreNum').textContent='0';
+  document.getElementById('progressFill').style.width='0%';
+  document.getElementById('finishBtn').style.display='none';
+  document.getElementById('resultsCard').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>

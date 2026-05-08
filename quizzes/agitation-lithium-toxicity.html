@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Acute Agitation, Psychiatric Holds &amp; Lithium Toxicity – Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Jost:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:#faf8f5;--bg2:#ffffff;--bg3:#f5f0ea;--surface:#f0ebe3;--surface2:#e8dfd4;
+  --border:#ddd3c4;--border2:#c9b9a6;--text:#2d1f14;--text2:#6b5143;--text3:#9e8270;
+  --accent:#b5845a;--accent2:#c9956b;--green:#6b8f71;--yellow:#c49a3c;--red:#b05050;
+  --purple:#7e6a9e;--cyan:#4d8a8a;--cream:#fdf9f4;
+  --font-head:'Cormorant Garamond',Georgia,serif;
+  --font-body:'Jost',sans-serif;
+  --font-mono:'DM Mono',monospace;
+  --radius:10px;--radius-sm:6px;
+  --shadow:0 2px 16px rgba(45,31,20,0.08);
+  --shadow-lg:0 6px 40px rgba(45,31,20,0.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+a{color:var(--accent2);text-decoration:none}
+button{cursor:pointer;font-family:var(--font-body);border:none;background:none;color:inherit}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.2}
+
+.app-nav{background:var(--cream);border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:16px;height:64px;position:sticky;top:0;z-index:100;box-shadow:0 1px 12px rgba(45,31,20,0.06)}
+.nav-brand{font-family:var(--font-head);font-size:1.35rem;font-weight:600;color:var(--text);letter-spacing:.01em;display:flex;align-items:center;gap:8px;font-style:italic;text-decoration:none}
+.nav-brand span{color:var(--accent);font-style:normal;font-weight:400}
+.nav-links{display:flex;gap:2px;margin-left:auto;align-items:center}
+.nav-link{padding:6px 14px;border-radius:20px;font-size:.8rem;font-weight:500;letter-spacing:.02em;text-transform:uppercase;color:var(--text3);transition:all .18s;cursor:pointer;text-decoration:none}
+.nav-link:hover{color:var(--text);background:var(--surface)}
+.nav-link.active{background:var(--accent);color:#fff}
+
+.main-content{flex:1;padding:36px 28px;max-width:860px;margin:0 auto;width:100%}
+
+.quiz-header{margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.quiz-category{font-size:.75rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.quiz-title{font-family:var(--font-head);font-size:2rem;font-weight:600;color:var(--text);font-style:italic;margin-bottom:8px}
+.quiz-meta{font-size:.85rem;color:var(--text3)}
+
+.quiz-container{max-width:700px}
+.quiz-question{margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.quiz-question:last-child{border-bottom:none}
+.quiz-stem{font-weight:500;margin-bottom:14px;line-height:1.7;font-size:.95rem;color:var(--text)}
+.quiz-option{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;cursor:pointer;transition:all .15s;font-size:.9rem;color:var(--text2)}
+.quiz-option:hover:not(.disabled){border-color:var(--accent);background:rgba(181,132,90,.05)}
+.quiz-option.selected{border-color:var(--accent);background:rgba(181,132,90,.08)}
+.quiz-option.correct{border-color:var(--green);background:rgba(107,143,113,.08);color:var(--green)}
+.quiz-option.incorrect{border-color:var(--red);background:rgba(176,80,80,.07);color:var(--red)}
+.quiz-option.disabled{cursor:not-allowed;opacity:.7}
+.quiz-option.show-correct{border-color:var(--green);background:rgba(107,143,113,.08)}
+.quiz-radio{width:18px;height:18px;border:1.5px solid var(--border2);border-radius:50%;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.quiz-radio.filled{background:var(--accent);border-color:var(--accent)}
+.quiz-radio.filled::after{content:'';width:6px;height:6px;border-radius:50%;background:#fff}
+.explanation-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin-top:10px;font-size:.875rem;color:var(--text2);line-height:1.7}
+
+.score-bar{position:sticky;bottom:0;background:var(--cream);border-top:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;z-index:50}
+.score-text{font-size:.9rem;color:var(--text2)}
+.score-text strong{color:var(--text);font-family:var(--font-head);font-size:1.1rem}
+.progress-bar{flex:1;max-width:300px;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;background:var(--green);transition:width .3s ease;width:0%}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 22px;border-radius:var(--radius-sm);font-size:.85rem;font-weight:500;letter-spacing:.03em;transition:all .18s;cursor:pointer;border:none}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:#a0733e;box-shadow:0 4px 12px rgba(181,132,90,.3)}
+.btn-outline{background:transparent;border:1px solid var(--border2);color:var(--text2)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+
+.results-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:32px;text-align:center;margin:32px 0}
+.results-score{font-family:var(--font-head);font-size:3rem;font-weight:700;color:var(--accent);margin-bottom:8px}
+.results-label{font-size:1rem;color:var(--text2);margin-bottom:16px}
+.results-bar{height:8px;background:var(--surface2);border-radius:4px;overflow:hidden;max-width:300px;margin:0 auto 16px}
+.results-fill{height:100%;border-radius:4px;transition:width .5s ease}
+
+@media(max-width:600px){
+  .main-content{padding:20px 16px}
+  .quiz-title{font-size:1.5rem}
+  .score-bar{padding:10px 16px;flex-wrap:wrap}
+  .app-nav{padding:0 16px}
+}
+</style>
+</head>
+<body>
+<nav class="app-nav">
+  <a class="nav-brand" href="../index.html">Psych<span>Curriculum</span></a>
+  <div class="nav-links">
+    <a class="nav-link" href="../index.html">Home</a>
+    <a class="nav-link active" href="index.html">Quizzes</a>
+  </div>
+</nav>
+<div class="main-content">
+  <div class="quiz-header">
+    <div class="quiz-category">Emergencies</div>
+    <h1 class="quiz-title">Acute Agitation, Psychiatric Holds &amp; Lithium Toxicity</h1>
+    <div class="quiz-meta"><span id="totalQ">10</span> questions</div>
+  </div>
+  <div class="quiz-container" id="quizBody">
+    <div class="quiz-question" id="q0">
+      <div class="quiz-stem">1. A patient on lithium 900mg/day for bipolar I disorder reports 3 days of profuse diarrhea from a GI illness. Today she is confused and ataxic. Her lithium level returns at 2.3 mEq/L. What is the MOST appropriate management?</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 0)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Hold lithium, give oral rehydration, and recheck level in 3 days as outpatient</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 0)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Admit for IV fluid resuscitation, hold lithium, serial levels, monitor renal function</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 0)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Continue lithium at half-dose until GI illness resolves</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 0)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Administer activated charcoal to reduce absorption</span>
+      </div>
+      <div class="explanation-box" style="display:none">Level of 2.3 mEq/L with neurological symptoms (confusion, ataxia) = moderate-to-severe lithium toxicity. Dehydration from GI illness significantly reduces renal clearance, raising the level. This requires hospital admission for IV fluid resuscitation, lithium hold, serial levels, and close monitoring of renal function. Oral rehydration as outpatient is insufficient given the neurological involvement.</div>
+    </div>
+
+    <div class="quiz-question" id="q1">
+      <div class="quiz-stem">2. A patient on haloperidol presents with acute agitation related to alcohol intoxication. Which IM medication should you AVOID?</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 1)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Lorazepam 1–2mg IM for anxiolytic effect</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 1)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> IM olanzapine given simultaneously with IM lorazepam</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 1)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Haloperidol 5mg IM as monotherapy</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 1)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Droperidol 5mg IM for rapid effect</span>
+      </div>
+      <div class="explanation-box" style="display:none">Concurrent IM olanzapine + IM lorazepam (or IV benzodiazepines) significantly increases the risk of severe respiratory depression and cardiopulmonary arrest. This combination is contraindicated per FDA labeling. If you need to combine an antipsychotic with a benzodiazepine for agitation, use haloperidol + lorazepam (the 'B52'), not olanzapine + lorazepam.</div>
+    </div>
+
+    <div class="quiz-question" id="q2">
+      <div class="quiz-stem">3. Which of the following can RAISE serum lithium levels? Select all that apply.</div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 2)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> NSAIDs (ibuprofen, naproxen)</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 2)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Thiazide diuretics</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 2)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> ACE inhibitors</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 2)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Dehydration and salt restriction</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 2)">
+        <div class="quiz-radio"></div>
+        <span><strong>E.</strong> Loop diuretics (furosemide)</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 2)">
+        <div class="quiz-radio"></div>
+        <span><strong>F.</strong> Theophylline</span>
+      </div>
+      <div class="explanation-box" style="display:none">NSAIDs (reduce renal prostaglandins → decreased lithium clearance), thiazide diuretics (paradoxically increase lithium reabsorption in proximal tubule), ACE inhibitors, and dehydration/sodium restriction all raise lithium levels by reducing renal clearance. Loop diuretics and theophylline actually LOWER lithium levels. This is clinically critical — patients must know not to take OTC ibuprofen.</div>
+    </div>
+
+    <div class="quiz-question" id="q3">
+      <div class="quiz-stem">4. A patient with a known psychiatric history presents to the ED expressing a wish to kill his neighbor, with whom he has been in an ongoing dispute. He is voluntary and cooperative. He has no plan, no weapon access, and no prior violence history. He agrees to follow-up tomorrow. What is the APPROPRIATE basis for evaluating a psychiatric hold?</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 3)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Holds are not appropriate without a specific plan and weapon access</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 3)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Any expressed violence toward another person is sufficient for a hold without further evaluation</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 3)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> A hold requires a qualifying psychiatric condition AND specific credible danger to others — evaluate the clinical picture for both</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 3)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> The patient's cooperation and agreement to follow-up eliminates the need for further risk assessment</span>
+      </div>
+      <div class="explanation-box" style="display:none">A psychiatric hold requires both a qualifying psychiatric condition and meeting the legal threshold for dangerousness. Patient cooperation or verbal agreement to follow up does not eliminate the need for risk assessment. However, verbal threats without plan, means, or credible history do not automatically meet the threshold. The clinician must document a full risk assessment and make a judgment about whether the specific dangerousness criteria are met.</div>
+    </div>
+
+    <div class="quiz-question" id="q4">
+      <div class="quiz-stem">5. Hemodialysis for lithium toxicity is most clearly indicated when:</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 4)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> The serum lithium level exceeds 1.5 mEq/L</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 4)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> The patient develops any symptoms of lithium toxicity</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 4)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> There are severe symptoms (seizures, coma) OR levels exceed 3.5–4 mEq/L, or renal failure prevents clearance</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 4)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> The patient refuses oral hydration</span>
+      </div>
+      <div class="explanation-box" style="display:none">Hemodialysis is the definitive treatment to rapidly remove lithium in severe toxicity. Clear indications include: levels &gt;3.5–4 mEq/L, severe neurological symptoms (seizures, coma), severe cardiac arrhythmias, and renal failure preventing adequate clearance. Mild-moderate toxicity is typically managed with IV fluids and supportive care. Dialysis can be life-saving and prevents permanent neurological damage.</div>
+    </div>
+
+    <div class="quiz-question" id="q5">
+      <div class="quiz-stem">6. The 'B52' psychiatric emergency regimen consists of:</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 5)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Benztropine 5 mg + Haldol 2 mg IM</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 5)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Benadryl (diphenhydramine) 50 mg + Haldol 5 mg IM + Ativan (lorazepam) 2 mg IM</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 5)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Bupropion 500 mg + diazepam 2 mg</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 5)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> B12 injection + haloperidol 2 mg</span>
+      </div>
+      <div class="explanation-box" style="display:none">The 'B52' is a classic emergency psychiatry combination: Benadryl (diphenhydramine) 50 mg + Haloperidol 5 mg + Ativan (lorazepam) 2 mg — all given IM. It combines the anticholinergic-H1 sedation (diphenhydramine), D2 antipsychotic (haloperidol), and GABA-mediated sedation (lorazepam) for rapid control of acute agitation. Named for the total mg (50 + 2 = B52).</div>
+    </div>
+
+    <div class="quiz-question" id="q6">
+      <div class="quiz-stem">7. A 5150 psychiatric hold (California) or equivalent involuntary hold in most US states is justified when a patient is:</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 6)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Non-compliant with outpatient medication</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 6)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> A danger to self, danger to others, OR gravely disabled due to mental disorder</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 6)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Homeless and refusing shelter</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 6)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Using illicit substances</span>
+      </div>
+      <div class="explanation-box" style="display:none">Involuntary psychiatric holds (5150 in California, Baker Act in Florida, etc.) require that a person's mental disorder makes them: (1) dangerous to self, (2) dangerous to others, OR (3) gravely disabled (unable to provide for their basic needs of food, clothing, shelter). Non-compliance, homelessness, or substance use alone do not meet criteria.</div>
+    </div>
+
+    <div class="quiz-question" id="q7">
+      <div class="quiz-stem">8. Lithium toxicity presents with which classic triad?</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 7)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Fever, rigidity, elevated CK</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 7)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Tremor, ataxia/nystagmus, confusion (then seizures/coma in severe cases)</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 7)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Diaphoresis, tachycardia, diarrhea</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 7)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Hypotension, bradycardia, hypothermia</span>
+      </div>
+      <div class="explanation-box" style="display:none">Lithium toxicity classically presents with a progressive triad: (1) tremor (coarse, different from therapeutic fine tremor), (2) ataxia and nystagmus, (3) confusion/delirium — progressing to seizures and coma with severe toxicity. Key triggers: dehydration, NSAIDs, thiazide diuretics (reduce renal lithium clearance), ACE inhibitors, and salt restriction.</div>
+    </div>
+
+    <div class="quiz-question" id="q8">
+      <div class="quiz-stem">9. Verbal de-escalation in acute agitation should be attempted BEFORE restraints or medications when:</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 8)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Never — medications are always first-line</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 8)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> When the patient is communicative and not imminently dangerous to staff or self</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 8)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Only in outpatient settings</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 8)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Only when family members are present</span>
+      </div>
+      <div class="explanation-box" style="display:none">Verbal de-escalation is always attempted first when safe to do so — when the patient is communicable and not posing immediate imminent danger. Core techniques: calm tone, maintaining distance, active listening, avoiding confrontation, offering choices, and validating emotions. Joint Commission and SAMHSA guidelines emphasize de-escalation to reduce restraint use.</div>
+    </div>
+
+    <div class="quiz-question" id="q9">
+      <div class="quiz-stem">10. What is the key advantage of droperidol over haloperidol for acute agitation management?</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 9)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> No QTc risk</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 9)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Faster onset of action (IM peak effect ~10–15 minutes vs. 30–40 minutes for haloperidol)</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 9)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Droperidol can be given orally</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 9)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> No EPS risk with droperidol</span>
+      </div>
+      <div class="explanation-box" style="display:none">Droperidol has a faster onset of action than haloperidol IM (~10–15 minutes vs. 30–40 minutes), making it particularly useful for acute agitation requiring rapid control. Both can prolong QTc (droperidol has an FDA black-box warning for QTc, though this is considered controversial). Droperidol also has antiemetic properties.</div>
+    </div>
+  </div>
+  <div class="results-card" id="resultsCard" style="display:none">
+    <div class="results-score" id="finalScore">0%</div>
+    <div class="results-label" id="finalLabel">0 / 10 correct</div>
+    <div class="results-bar"><div class="results-fill" id="finalBar" style="width:0%;background:var(--green)"></div></div>
+    <button class="btn btn-primary" onclick="resetQuiz()" style="margin-top:12px">Retake Quiz</button>
+    <a class="btn btn-outline" href="index.html" style="margin-top:8px;display:inline-flex">Back to All Quizzes</a>
+  </div>
+</div>
+<div class="score-bar" id="scoreBar">
+  <div class="score-text">Score: <strong><span id="scoreNum">0</span> / 10</strong></div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <button class="btn btn-primary" id="finishBtn" onclick="finishQuiz()" style="display:none">View Results</button>
+</div>
+<script>
+let answered=0,correct=0,total=10;
+function selectOption(el,qi){
+  const q=document.getElementById('q'+qi);
+  if(q.classList.contains('answered'))return;
+  q.classList.add('answered');
+  const opts=q.querySelectorAll('.quiz-option');
+  const isCorrect=el.dataset.correct==='true';
+  opts.forEach(o=>{
+    o.classList.add('disabled');
+    if(o.dataset.correct==='true'){o.classList.add('show-correct');o.querySelector('.quiz-radio').classList.add('filled')}
+  });
+  if(isCorrect){el.classList.add('correct');correct++}
+  else{el.classList.add('incorrect')}
+  el.querySelector('.quiz-radio').classList.add('filled');
+  const expl=q.querySelector('.explanation-box');
+  if(expl&&expl.textContent.trim())expl.style.display='block';
+  answered++;
+  document.getElementById('scoreNum').textContent=correct;
+  document.getElementById('progressFill').style.width=(answered/total*100)+'%';
+  if(answered===total)document.getElementById('finishBtn').style.display='inline-flex';
+}
+function finishQuiz(){
+  const pct=Math.round(correct/total*100);
+  document.getElementById('finalScore').textContent=pct+'%';
+  document.getElementById('finalLabel').textContent=correct+' / '+total+' correct';
+  document.getElementById('finalBar').style.width=pct+'%';
+  if(pct>=80)document.getElementById('finalBar').style.background='var(--green)';
+  else if(pct>=60)document.getElementById('finalBar').style.background='var(--yellow)';
+  else document.getElementById('finalBar').style.background='var(--red)';
+  document.getElementById('resultsCard').style.display='block';
+  document.getElementById('resultsCard').scrollIntoView({behavior:'smooth'});
+}
+function resetQuiz(){
+  answered=0;correct=0;
+  document.querySelectorAll('.quiz-question').forEach(q=>{
+    q.classList.remove('answered');
+    q.querySelectorAll('.quiz-option').forEach(o=>{
+      o.classList.remove('disabled','correct','incorrect','selected','show-correct');
+      o.querySelector('.quiz-radio').classList.remove('filled');
+    });
+    const expl=q.querySelector('.explanation-box');
+    if(expl)expl.style.display='none';
+  });
+  document.getElementById('scoreNum').textContent='0';
+  document.getElementById('progressFill').style.width='0%';
+  document.getElementById('finishBtn').style.display='none';
+  document.getElementById('resultsCard').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>

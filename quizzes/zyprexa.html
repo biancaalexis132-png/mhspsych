@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Olanzapine (Zyprexa) – Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Jost:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:#faf8f5;--bg2:#ffffff;--bg3:#f5f0ea;--surface:#f0ebe3;--surface2:#e8dfd4;
+  --border:#ddd3c4;--border2:#c9b9a6;--text:#2d1f14;--text2:#6b5143;--text3:#9e8270;
+  --accent:#b5845a;--accent2:#c9956b;--green:#6b8f71;--yellow:#c49a3c;--red:#b05050;
+  --purple:#7e6a9e;--cyan:#4d8a8a;--cream:#fdf9f4;
+  --font-head:'Cormorant Garamond',Georgia,serif;
+  --font-body:'Jost',sans-serif;
+  --font-mono:'DM Mono',monospace;
+  --radius:10px;--radius-sm:6px;
+  --shadow:0 2px 16px rgba(45,31,20,0.08);
+  --shadow-lg:0 6px 40px rgba(45,31,20,0.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+a{color:var(--accent2);text-decoration:none}
+button{cursor:pointer;font-family:var(--font-body);border:none;background:none;color:inherit}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.2}
+
+.app-nav{background:var(--cream);border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:16px;height:64px;position:sticky;top:0;z-index:100;box-shadow:0 1px 12px rgba(45,31,20,0.06)}
+.nav-brand{font-family:var(--font-head);font-size:1.35rem;font-weight:600;color:var(--text);letter-spacing:.01em;display:flex;align-items:center;gap:8px;font-style:italic;text-decoration:none}
+.nav-brand span{color:var(--accent);font-style:normal;font-weight:400}
+.nav-links{display:flex;gap:2px;margin-left:auto;align-items:center}
+.nav-link{padding:6px 14px;border-radius:20px;font-size:.8rem;font-weight:500;letter-spacing:.02em;text-transform:uppercase;color:var(--text3);transition:all .18s;cursor:pointer;text-decoration:none}
+.nav-link:hover{color:var(--text);background:var(--surface)}
+.nav-link.active{background:var(--accent);color:#fff}
+
+.main-content{flex:1;padding:36px 28px;max-width:860px;margin:0 auto;width:100%}
+
+.quiz-header{margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.quiz-category{font-size:.75rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.quiz-title{font-family:var(--font-head);font-size:2rem;font-weight:600;color:var(--text);font-style:italic;margin-bottom:8px}
+.quiz-meta{font-size:.85rem;color:var(--text3)}
+
+.quiz-container{max-width:700px}
+.quiz-question{margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.quiz-question:last-child{border-bottom:none}
+.quiz-stem{font-weight:500;margin-bottom:14px;line-height:1.7;font-size:.95rem;color:var(--text)}
+.quiz-option{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;cursor:pointer;transition:all .15s;font-size:.9rem;color:var(--text2)}
+.quiz-option:hover:not(.disabled){border-color:var(--accent);background:rgba(181,132,90,.05)}
+.quiz-option.selected{border-color:var(--accent);background:rgba(181,132,90,.08)}
+.quiz-option.correct{border-color:var(--green);background:rgba(107,143,113,.08);color:var(--green)}
+.quiz-option.incorrect{border-color:var(--red);background:rgba(176,80,80,.07);color:var(--red)}
+.quiz-option.disabled{cursor:not-allowed;opacity:.7}
+.quiz-option.show-correct{border-color:var(--green);background:rgba(107,143,113,.08)}
+.quiz-radio{width:18px;height:18px;border:1.5px solid var(--border2);border-radius:50%;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.quiz-radio.filled{background:var(--accent);border-color:var(--accent)}
+.quiz-radio.filled::after{content:'';width:6px;height:6px;border-radius:50%;background:#fff}
+.explanation-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin-top:10px;font-size:.875rem;color:var(--text2);line-height:1.7}
+
+.score-bar{position:sticky;bottom:0;background:var(--cream);border-top:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;z-index:50}
+.score-text{font-size:.9rem;color:var(--text2)}
+.score-text strong{color:var(--text);font-family:var(--font-head);font-size:1.1rem}
+.progress-bar{flex:1;max-width:300px;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;background:var(--green);transition:width .3s ease;width:0%}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 22px;border-radius:var(--radius-sm);font-size:.85rem;font-weight:500;letter-spacing:.03em;transition:all .18s;cursor:pointer;border:none}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:#a0733e;box-shadow:0 4px 12px rgba(181,132,90,.3)}
+.btn-outline{background:transparent;border:1px solid var(--border2);color:var(--text2)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+
+.results-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:32px;text-align:center;margin:32px 0}
+.results-score{font-family:var(--font-head);font-size:3rem;font-weight:700;color:var(--accent);margin-bottom:8px}
+.results-label{font-size:1rem;color:var(--text2);margin-bottom:16px}
+.results-bar{height:8px;background:var(--surface2);border-radius:4px;overflow:hidden;max-width:300px;margin:0 auto 16px}
+.results-fill{height:100%;border-radius:4px;transition:width .5s ease}
+
+@media(max-width:600px){
+  .main-content{padding:20px 16px}
+  .quiz-title{font-size:1.5rem}
+  .score-bar{padding:10px 16px;flex-wrap:wrap}
+  .app-nav{padding:0 16px}
+}
+</style>
+</head>
+<body>
+<nav class="app-nav">
+  <a class="nav-brand" href="../index.html">Psych<span>Curriculum</span></a>
+  <div class="nav-links">
+    <a class="nav-link" href="../index.html">Home</a>
+    <a class="nav-link active" href="index.html">Quizzes</a>
+  </div>
+</nav>
+<div class="main-content">
+  <div class="quiz-header">
+    <div class="quiz-category">Antipsychotics</div>
+    <h1 class="quiz-title">Olanzapine (Zyprexa)</h1>
+    <div class="quiz-meta"><span id="totalQ">10</span> questions</div>
+  </div>
+  <div class="quiz-container" id="quizBody">
+    <div class="quiz-question" id="q0">
+      <div class="quiz-stem">1. Compared to first-generation antipsychotics, &quot;-pine&quot; antipsychotics like olanzapine generally have:</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 0)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Higher dopamine blockade and lower antihistaminic actions</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 0)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Higher rates of EPS and less metabolic dysfunction</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 0)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Lower dopamine blockade and higher antihistaminic and anticholinergic actions</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 0)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Lower rates of sedation and anticholinergic side effects</span>
+      </div>
+      <div class="explanation-box" style="display:none"></div>
+    </div>
+
+    <div class="quiz-question" id="q1">
+      <div class="quiz-stem">2. Which is NOT an FDA-approved indication for olanzapine alone?</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 1)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Schizophrenia</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 1)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Acute mania</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 1)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Behavioral disturbances in dementia</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 1)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Bipolar maintenance</span>
+      </div>
+      <div class="explanation-box" style="display:none"></div>
+    </div>
+
+    <div class="quiz-question" id="q2">
+      <div class="quiz-stem">3. Olanzapine first received FDA approval in which year?</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 2)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> 2023</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 2)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> 1990</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 2)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> 1996</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 2)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> 2006</span>
+      </div>
+      <div class="explanation-box" style="display:none"></div>
+    </div>
+
+    <div class="quiz-question" id="q3">
+      <div class="quiz-stem">4. The Zydis ODT formulation was found to reach the bloodstream on average approximately:</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 3)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> 30 minutes after ingestion</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 3)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> 10 minutes after ingestion</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 3)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> 3.5 hours after ingestion</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 3)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> 15 to 45 minutes after ingestion</span>
+      </div>
+      <div class="explanation-box" style="display:none"></div>
+    </div>
+
+    <div class="quiz-question" id="q4">
+      <div class="quiz-stem">5. Olanzapine is largely metabolized by which enzyme?</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 4)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> CYP 2D6</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 4)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> CYP 3A4</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 4)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> CYP 1A2</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 4)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> CYP 2C19</span>
+      </div>
+      <div class="explanation-box" style="display:none"></div>
+    </div>
+
+    <div class="quiz-question" id="q5">
+      <div class="quiz-stem">6. The FDA maximum dose for olanzapine in adults for mania or psychosis is:</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 5)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> 10 mg/day</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 5)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> 25 mg/day</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 5)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> 20 mg/day</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 5)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> 30 mg/day</span>
+      </div>
+      <div class="explanation-box" style="display:none"></div>
+    </div>
+
+    <div class="quiz-question" id="q6">
+      <div class="quiz-stem">7. Which side effect is olanzapine most notoriously associated with?</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 6)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Extrapyramidal symptoms</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 6)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> QTc prolongation</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 6)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Orthostatic hypotension</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 6)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Weight gain and metabolic dysfunction</span>
+      </div>
+      <div class="explanation-box" style="display:none"></div>
+    </div>
+
+    <div class="quiz-question" id="q7">
+      <div class="quiz-stem">8. The CATIE trial found that olanzapine:</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 7)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Had the lowest rate of discontinuation</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 7)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Had the lowest side effect burden</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 7)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Was the medication patients stayed on the longest, despite having the highest side effect burden</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 7)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Was dosed at an average of 10 mg/day</span>
+      </div>
+      <div class="explanation-box" style="display:none"></div>
+    </div>
+
+    <div class="quiz-question" id="q8">
+      <div class="quiz-stem">9. Why is olanzapine pamoate (Relprevv) LAI rarely used?</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 8)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> Requires daily administration</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 8)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> Low efficacy compared to oral</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 8)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> Risk of Post-injection Delirium Sedation Syndrome (PDSS), requiring mandated monitoring</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 8)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> Significantly more weight gain than oral</span>
+      </div>
+      <div class="explanation-box" style="display:none"></div>
+    </div>
+
+    <div class="quiz-question" id="q9">
+      <div class="quiz-stem">10. Samidorphan in Lybalvi (olanzapine + samidorphan) is described as:</div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 9)">
+        <div class="quiz-radio"></div>
+        <span><strong>A.</strong> A dopamine agonist</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 9)">
+        <div class="quiz-radio"></div>
+        <span><strong>B.</strong> A selective serotonin reuptake inhibitor</span>
+      </div>
+      <div class="quiz-option" data-correct="true" onclick="selectOption(this, 9)">
+        <div class="quiz-radio"></div>
+        <span><strong>C.</strong> An opioid antagonist, similar to naltrexone</span>
+      </div>
+      <div class="quiz-option" data-correct="false" onclick="selectOption(this, 9)">
+        <div class="quiz-radio"></div>
+        <span><strong>D.</strong> A CYP 1A2 inhibitor</span>
+      </div>
+      <div class="explanation-box" style="display:none"></div>
+    </div>
+  </div>
+  <div class="results-card" id="resultsCard" style="display:none">
+    <div class="results-score" id="finalScore">0%</div>
+    <div class="results-label" id="finalLabel">0 / 10 correct</div>
+    <div class="results-bar"><div class="results-fill" id="finalBar" style="width:0%;background:var(--green)"></div></div>
+    <button class="btn btn-primary" onclick="resetQuiz()" style="margin-top:12px">Retake Quiz</button>
+    <a class="btn btn-outline" href="index.html" style="margin-top:8px;display:inline-flex">Back to All Quizzes</a>
+  </div>
+</div>
+<div class="score-bar" id="scoreBar">
+  <div class="score-text">Score: <strong><span id="scoreNum">0</span> / 10</strong></div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <button class="btn btn-primary" id="finishBtn" onclick="finishQuiz()" style="display:none">View Results</button>
+</div>
+<script>
+let answered=0,correct=0,total=10;
+function selectOption(el,qi){
+  const q=document.getElementById('q'+qi);
+  if(q.classList.contains('answered'))return;
+  q.classList.add('answered');
+  const opts=q.querySelectorAll('.quiz-option');
+  const isCorrect=el.dataset.correct==='true';
+  opts.forEach(o=>{
+    o.classList.add('disabled');
+    if(o.dataset.correct==='true'){o.classList.add('show-correct');o.querySelector('.quiz-radio').classList.add('filled')}
+  });
+  if(isCorrect){el.classList.add('correct');correct++}
+  else{el.classList.add('incorrect')}
+  el.querySelector('.quiz-radio').classList.add('filled');
+  const expl=q.querySelector('.explanation-box');
+  if(expl&&expl.textContent.trim())expl.style.display='block';
+  answered++;
+  document.getElementById('scoreNum').textContent=correct;
+  document.getElementById('progressFill').style.width=(answered/total*100)+'%';
+  if(answered===total)document.getElementById('finishBtn').style.display='inline-flex';
+}
+function finishQuiz(){
+  const pct=Math.round(correct/total*100);
+  document.getElementById('finalScore').textContent=pct+'%';
+  document.getElementById('finalLabel').textContent=correct+' / '+total+' correct';
+  document.getElementById('finalBar').style.width=pct+'%';
+  if(pct>=80)document.getElementById('finalBar').style.background='var(--green)';
+  else if(pct>=60)document.getElementById('finalBar').style.background='var(--yellow)';
+  else document.getElementById('finalBar').style.background='var(--red)';
+  document.getElementById('resultsCard').style.display='block';
+  document.getElementById('resultsCard').scrollIntoView({behavior:'smooth'});
+}
+function resetQuiz(){
+  answered=0;correct=0;
+  document.querySelectorAll('.quiz-question').forEach(q=>{
+    q.classList.remove('answered');
+    q.querySelectorAll('.quiz-option').forEach(o=>{
+      o.classList.remove('disabled','correct','incorrect','selected','show-correct');
+      o.querySelector('.quiz-radio').classList.remove('filled');
+    });
+    const expl=q.querySelector('.explanation-box');
+    if(expl)expl.style.display='none';
+  });
+  document.getElementById('scoreNum').textContent='0';
+  document.getElementById('progressFill').style.width='0%';
+  document.getElementById('finishBtn').style.display='none';
+  document.getElementById('resultsCard').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>

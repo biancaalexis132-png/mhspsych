@@ -200,6 +200,7 @@ const App = {
         el('div', {class:`nav-link${this.page==='modules'?' active':''}`, onClick:()=>this.navigate('modules')}, 'Modules'),
         el('div', {class:`nav-link${this.page==='simulations'?' active':''}`, onClick:()=>this.navigate('simulations')}, 'Simulations'),
         el('div', {class:`nav-link${this.page==='podcasts'?' active':''}`, onClick:()=>this.navigate('podcasts')}, 'Podcasts'),
+        el('a', {class:'nav-link', href:'quizzes/index.html'}, 'Quizzes'),
         el('div', {class:`nav-link${this.page==='xp'?' active':''}`, onClick:()=>this.navigate('xp')}, `⚡ ${xp.totalXP} XP`),
         this.user.isAdmin ? el('div', {class:`nav-link${this.page==='admin'?' active':''}`, onClick:()=>this.navigate('admin')}, '👑 Admin') : null,
         el('div', {class:'nav-user'},
