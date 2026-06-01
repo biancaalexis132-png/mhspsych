@@ -4,6 +4,91 @@
 // Auth, Progress, and XPSystem are defined in db.js.
 // ============================================================
 
+// Lesson → standalone-quiz slug(s). Quizzes live in window.QUIZ_DATA
+// (built by build-quiz-data.js from quizzes/*.html). When a lesson is
+// rendered, any quizzes listed here are appended inline at the bottom of
+// the lesson page instead of being browsed from a separate Quizzes section.
+const LESSON_QUIZ_MAP = {
+  // Interviewing & MSE
+  'lesson-interview-intro':       ['psychiatric-interview'],
+  'lesson-mse':                   ['mental-status-exam'],
+  'lesson-risk-assessment':       ['suicide-risk-assessment', 'si-prevention'],
+  'lesson-diagnostic-formulation':['diagnostic-formulation'],
+
+  // Antipsychotics
+  'lesson-antipsych-overview':    ['antipsychotics-overview', 'triple-network-model',
+                                   'abilify', 'rexulti', 'cariprazine', 'lumateperone',
+                                   'latuda', 'geodon', 'loxapine'],
+  'lesson-eps':                   ['eps', 'eps-content'],
+  'lesson-metabolic-monitoring':  ['metabolic-monitoring'],
+  'lesson-lais':                  ['lai-antipsychotics'],
+  'lesson-clozapine-deep-dive':   ['clozapine-deep-dive', 'clozapine'],
+  'lesson-quetiapine':            ['quetiapine-content', 'seroquel'],
+  'lesson-olanzapine':            ['olanzapine-content', 'zyprexa', 'symbyax'],
+  'lesson-fluphenazine':          ['fluphenazine'],
+  'lesson-asenapine':             ['asenapine'],
+  'lesson-antipsychotic-plasma':  ['antipsychotic-tdm'],
+  'lesson-antipsychotic-weight':  ['antipsychotic-weight-gain', 'antipsychotic-weight-content'],
+
+  // Antidepressants
+  'lesson-antidep-overview':      ['antidepressants-overview'],
+  'lesson-serotonin-syndrome':    ['serotonin-syndrome'],
+  'lesson-discontinuation':       ['discontinuation-syndrome'],
+  'lesson-ssris':                 ['ssris'],
+  'lesson-snris':                 ['snris'],
+  'lesson-bupropion':             ['bupropion'],
+  'lesson-mirtazapine':           ['mirtazapine'],
+  'lesson-tcas':                  ['tcas', 'tcas-content'],
+  'lesson-maois':                 ['maois', 'maois-content'],
+  'lesson-depression-inflammation':['depression-inflammation'],
+  'lesson-ketamine-trd':          ['ketamine-esketamine', 'ketamine-esketamine-content'],
+  'lesson-novel-antidepressants': ['novel-antidepressants'],
+  'lesson-nutritional-psychiatry':['nutritional-psychiatry'],
+
+  // Mood stabilizers
+  'lesson-lithium':               ['lithium'],
+  'lesson-valproate':             ['valproate'],
+  'lesson-lamotrigine':           ['lamotrigine-carbamazepine'],
+
+  // Anxiolytics / sleep
+  'lesson-benzos':                ['benzodiazepines'],
+  'lesson-sleep-meds':            ['sleep-pharmacology', 'z-drugs', 'h1-antagonists',
+                                   'h1-agonists-sleep', 'melatonin-ramelteon'],
+
+  // Substance use
+  'lesson-withdrawal-syndromes':  ['withdrawal-syndromes'],
+  'lesson-mat':                   ['medication-assisted-treatment'],
+  'lesson-stimulants-cannabis':   ['stimulants-cannabis'],
+
+  // Emergencies
+  'lesson-nms-catatonia':         ['nms-catatonia'],
+  'lesson-agitation-holds':       ['agitation-lithium-toxicity'],
+
+  // Special populations
+  'lesson-pregnancy-psychiatry':  ['pregnancy-psychiatry'],
+  'lesson-geriatric-psychiatry':  ['geriatric-delirium'],
+  'lesson-child-adolescent':      ['child-adolescent'],
+};
+
+// Resolve standalone quizzes for a lesson. Returns array of
+// { slug, title, category, questions } from window.QUIZ_DATA.
+function getLessonExternalQuizzes(lessonId) {
+  const slugs = LESSON_QUIZ_MAP[lessonId];
+  if (!slugs || !slugs.length || typeof window === 'undefined' || !window.QUIZ_DATA) return [];
+  return slugs
+    .map(slug => {
+      const q = window.QUIZ_DATA[slug];
+      return q ? { slug, ...q } : null;
+    })
+    .filter(Boolean);
+}
+
+function lessonHasAnyQuiz(lesson) {
+  if (!lesson) return false;
+  if (lesson.quizQuestions?.length > 0) return true;
+  return getLessonExternalQuizzes(lesson.id).length > 0;
+}
+
 // ── Rendering helpers ─────────────────────────────────────────
 function el(tag, attrs = {}, ...children) {
   const e = document.createElement(tag);
@@ -200,7 +285,6 @@ const App = {
         el('div', {class:`nav-link${this.page==='modules'?' active':''}`, onClick:()=>this.navigate('modules')}, 'Modules'),
         el('div', {class:`nav-link${this.page==='simulations'?' active':''}`, onClick:()=>this.navigate('simulations')}, 'Simulations'),
         el('div', {class:`nav-link${this.page==='podcasts'?' active':''}`, onClick:()=>this.navigate('podcasts')}, 'Podcasts'),
-        el('a', {class:'nav-link', href:'quizzes/index.html'}, 'Quizzes'),
         el('div', {class:`nav-link${this.page==='xp'?' active':''}`, onClick:()=>this.navigate('xp')}, `⚡ ${xp.totalXP} XP`),
         this.user.isAdmin ? el('div', {class:`nav-link${this.page==='admin'?' active':''}`, onClick:()=>this.navigate('admin')}, '👑 Admin') : null,
         el('div', {class:'nav-user'},
@@ -493,7 +577,7 @@ const App = {
         ),
         el('div', {class:'module-stats'},
           el('span', {}, `${mod.lessons.length} lessons`),
-          el('span', {}, `${mod.lessons.filter(l => l.quizQuestions?.length > 0).length} quizzes`)
+          el('span', {}, `${mod.lessons.filter(l => lessonHasAnyQuiz(l)).length} quizzes`)
         )
       );
       grid.appendChild(card);
@@ -537,7 +621,7 @@ const App = {
     for (const lesson of mod.lessons) {
       const done = p.lessons[lesson.id]?.completed;
       const quizData = p.quizzes[lesson.id];
-      const hasQuiz = lesson.quizQuestions?.length > 0;
+      const hasQuiz = lessonHasAnyQuiz(lesson);
       
       const row = el('div', {class:'lesson-item'},
         el('div', {class:`lesson-check${done ? ' done' : ''}`}, done ? '✓' : ''),
@@ -550,7 +634,7 @@ const App = {
         ),
         el('div', {style:'display:flex;gap:6px;flex-shrink:0'},
           el('button', {class:'btn btn-outline btn-sm', onClick:()=>this.navigateTo('lesson', {lessonId: lesson.id, moduleId: mod.id})}, done ? '↺ Review' : '→ Start'),
-          hasQuiz ? el('button', {class:'btn btn-outline btn-sm', onClick:()=>this.navigateTo('quiz', {lessonId: lesson.id, moduleId: mod.id})}, '📝 Quiz') : null
+          hasQuiz ? el('button', {class:'btn btn-outline btn-sm', onClick:()=>this.navigateTo('lesson', {lessonId: lesson.id, moduleId: mod.id, scrollToQuiz: true})}, '📝 Quiz') : null
         )
       );
       wrap.appendChild(row);
@@ -662,6 +746,12 @@ const App = {
       } else if (section.type === 'interactive') {
         secDiv.appendChild(el('div', {class:'section-title'}, section.title));
         secDiv.appendChild(this.renderInteractive(section));
+      } else if (section.type === 'quiz') {
+        if (section.title) secDiv.appendChild(el('div', {class:'section-title'}, section.title));
+        const qs = section.questions || [];
+        if (qs.length > 0) {
+          secDiv.appendChild(this.buildQuizBlock(qs, { title: section.title || 'Knowledge Check' }));
+        }
       }
       
       wrap.appendChild(secDiv);
@@ -723,6 +813,35 @@ const App = {
       wrap.appendChild(refDiv);
     }
     
+    // Inline lesson quiz(zes) — appears at the bottom of the lesson, no
+    // separate page. Combines the lesson's own `quizQuestions` with any
+    // standalone quizzes mapped to this lesson in LESSON_QUIZ_MAP.
+    const externalQuizzes = getLessonExternalQuizzes(lessonId);
+    const hasInlineQuiz = lesson.quizQuestions?.length > 0;
+    let firstQuizBlock = null;
+
+    if (hasInlineQuiz) {
+      const quizBlock = this.buildQuizBlock(lesson.quizQuestions, {
+        lessonId, moduleId,
+        title: 'Lesson Quiz'
+      });
+      if (!firstQuizBlock) { quizBlock.id = 'lesson-quiz'; firstQuizBlock = quizBlock; }
+      wrap.appendChild(quizBlock);
+    }
+
+    for (const eq of externalQuizzes) {
+      const quizBlock = this.buildQuizBlock(eq.questions, {
+        // Persist progress only when this is the lesson's sole quiz set,
+        // so it can serve as the "lesson quiz" for completion/XP tracking.
+        ...((!hasInlineQuiz && externalQuizzes.length === 1) ? { lessonId, moduleId } : {}),
+        title: eq.title + (eq.category ? ` — ${eq.category}` : '')
+      });
+      if (!firstQuizBlock) { quizBlock.id = 'lesson-quiz'; firstQuizBlock = quizBlock; }
+      wrap.appendChild(quizBlock);
+    }
+
+    const hasAnyQuiz = Boolean(firstQuizBlock);
+
     // Mark complete / Quiz buttons
     const btnRow = el('div', {style:'display:flex;gap:10px;flex-wrap:wrap;margin-top:28px;padding-top:20px;border-top:1px solid var(--border)'});
     
@@ -744,14 +863,26 @@ const App = {
       btnRow.appendChild(el('div', {class:'badge badge-green', style:'padding:8px 16px;font-size:.875rem'}, '✓ Completed'));
     }
     
-    if (lesson.quizQuestions?.length > 0) {
-      btnRow.appendChild(el('button', {class:'btn btn-outline', onClick:()=>this.navigateTo('quiz', {lessonId, moduleId})}, '📝 Take Quiz'));
+    if (hasAnyQuiz) {
+      btnRow.appendChild(el('button', {class:'btn btn-outline', onClick:() => {
+        const q = document.getElementById('lesson-quiz');
+        if (q) q.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }}, '📝 Jump to Quiz'));
     }
     
     btnRow.appendChild(el('button', {class:'btn btn-ghost', onClick:()=>this.navigateTo('module', moduleId)}, 'Back to Module'));
     
     wrap.appendChild(btnRow);
-    
+
+    // Optional: caller asked us to scroll to the quiz on load (used by the
+    // module list's quiz button and legacy navigateTo('quiz', ...) calls).
+    if (data && data.scrollToQuiz && hasAnyQuiz) {
+      setTimeout(() => {
+        const q = document.getElementById('lesson-quiz');
+        if (q) q.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 50);
+    }
+
     return wrap;
   },
   
@@ -1180,33 +1311,49 @@ const App = {
   },
   
   // ── Quiz ──────────────────────────────────────────────────
+  // Legacy entry point: still supports navigateTo('quiz', ...) URLs by
+  // bouncing back to the lesson page (where the quiz now lives inline).
   async renderQuiz(data) {
-    const { lessonId, moduleId } = data;
-    const mod = CONTENT_DATA.modules.find(m => m.id === moduleId);
-    const lesson = mod?.lessons.find(l => l.id === lessonId);
-    const questions = lesson?.quizQuestions || [];
-    
-    if (questions.length === 0) return el('div', {}, 'No quiz available');
-    
-    const wrap = el('div', {class:'quiz-container'});
-    wrap.appendChild(el('div', {class:'back-btn', onClick:()=>this.navigateTo('lesson', data)}, `← ${lesson.title}`));
-    wrap.appendChild(el('h1', {style:'font-family:var(--font-head);font-size:1.4rem;font-weight:800;margin-bottom:4px'}, '📝 Quiz'));
-    wrap.appendChild(el('div', {class:'text-muted text-sm', style:'margin-bottom:24px'}, `${questions.length} questions • Pass: 70%`));
-    
-    const state = { answers: {}, submitted: false, startTime: Date.now() };
-    
+    return this.renderLesson({ ...data, scrollToQuiz: true });
+  },
+
+  // Builds a self-contained quiz block element. Used inline inside lessons
+  // and for any mid-lesson `type:'quiz'` sections.
+  //   questions  — array of quiz question objects ({id, stem, options, correct, explanation})
+  //   opts.lessonId / opts.moduleId — when provided, results are persisted to Progress + XP
+  //   opts.title — header label (default "Knowledge Check")
+  //   opts.compact — render without the wrapping card chrome (for inline section quizzes)
+  buildQuizBlock(questions, opts = {}) {
+    const { lessonId, moduleId, title = 'Knowledge Check', compact = false } = opts;
+    const persist = Boolean(lessonId && moduleId);
+
+    const wrap = el('div', compact
+      ? { class: 'quiz-container', style: 'margin-top:8px' }
+      : { class: 'quiz-container card', style: 'margin-top:20px;padding:24px;border-left:3px solid var(--accent)' }
+    );
+
+    if (!compact) {
+      wrap.appendChild(el('div', { style: 'font-weight:700;color:var(--accent);font-size:.9rem;margin-bottom:4px;letter-spacing:.04em' }, `📝 ${title}`));
+      wrap.appendChild(el('div', { class: 'text-muted text-sm', style: 'margin-bottom:18px' },
+        `${questions.length} question${questions.length === 1 ? '' : 's'}${persist ? ' • Pass: 70%' : ''}`
+      ));
+    }
+
+    const qWrap = el('div', {});
+    const actDiv = el('div', { style: 'margin-top:20px' });
+    wrap.appendChild(qWrap);
+    wrap.appendChild(actDiv);
+
     const renderQuestions = () => {
-      const qWrap = document.getElementById('quiz-questions');
-      if (!qWrap) return;
       qWrap.innerHTML = '';
-      
+
       for (let qi = 0; qi < questions.length; qi++) {
         const q = questions[qi];
-        const qDiv = el('div', {class:'quiz-question'},
-          el('div', {style:'font-size:.8rem;color:var(--text3);margin-bottom:6px;font-family:var(--font-mono)'}, `Q${qi + 1} of ${questions.length}`),
-          el('div', {class:'quiz-stem'}, q.stem)
+        const qDiv = el('div', { class: 'quiz-question' },
+          el('div', { style: 'font-size:.8rem;color:var(--text3);margin-bottom:6px;font-family:var(--font-mono)' }, `Q${qi + 1} of ${questions.length}`),
+          el('div', { class: 'quiz-stem' }, q.stem)
         );
-        
+
         for (const opt of q.options) {
           const userAns = state.answers[q.id];
           const isSelected = userAns === opt.id;
@@ -1217,37 +1364,33 @@ const App = {
             else if (isSelected && !isCorrect) cls += ' incorrect';
             cls += ' disabled';
           } else if (isSelected) cls += ' selected';
-          
-          const optDiv = el('div', {class: cls, onClick:() => {
+
+          const optDiv = el('div', { class: cls, onClick: () => {
             if (state.submitted) return;
             state.answers[q.id] = opt.id;
             renderQuestions();
           }},
-            el('div', {class:`quiz-radio${isSelected ? ' filled' : ''}`}),
+            el('div', { class: `quiz-radio${isSelected ? ' filled' : ''}` }),
             el('span', {}, opt.text)
           );
           qDiv.appendChild(optDiv);
         }
-        
+
         if (state.submitted && q.explanation) {
-          const exp = el('div', {class:'explanation-box'}, q.explanation);
-          qDiv.appendChild(exp);
+          qDiv.appendChild(el('div', { class: 'explanation-box' }, q.explanation));
         }
-        
+
         qWrap.appendChild(qDiv);
       }
-      
+
       // Submit / results area
-      const actDiv = document.getElementById('quiz-action');
-      if (!actDiv) return;
       actDiv.innerHTML = '';
-      
+
       if (!state.submitted) {
         const answered = Object.keys(state.answers).length;
-        const submitBtn = el('button', {class:'btn btn-primary', disabled: answered < questions.length, onClick:async () => {
+        const submitBtn = el('button', { class: 'btn btn-primary', disabled: answered < questions.length, onClick: async () => {
           submitBtn.disabled = true; submitBtn.textContent = 'Saving…';
           state.submitted = true;
-          const timeSpent = Math.round((Date.now() - state.startTime) / 1000);
           let correct = 0;
           for (const q of questions) {
             if (q.correct.includes(state.answers[q.id])) correct++;
@@ -1255,13 +1398,17 @@ const App = {
           const score = Math.round((correct / questions.length) * 100);
           const passed = score >= 70;
           const isPerfect = score === 100;
-          
-          await Progress.submitQuiz(this.user.id, lessonId, moduleId, score, questions.length, correct, passed, Object.entries(state.answers).map(([qId, ans]) => ({ questionId: qId, selected: [ans], correct: questions.find(q => q.id === qId)?.correct.includes(ans) || false })));
-          const xpResult = await XPSystem.awardQuiz(this.user.id, lessonId, score, isPerfect);
-          showToast(`📝 Quiz complete! ${score}% ${passed ? '✓ Passed' : '✗ Failed'} • +${xpResult.xpAwarded} XP`);
-          const newBadges = await XPSystem.checkBadges(this.user.id);
-          for (const b of newBadges) showToast(`🏆 Badge: ${b.name} +${b.xp} XP`);
-          
+
+          if (persist) {
+            try {
+              await Progress.submitQuiz(this.user.id, lessonId, moduleId, score, questions.length, correct, passed, Object.entries(state.answers).map(([qId, ans]) => ({ questionId: qId, selected: [ans], correct: questions.find(q => q.id === qId)?.correct.includes(ans) || false })));
+              const xpResult = await XPSystem.awardQuiz(this.user.id, lessonId, score, isPerfect);
+              showToast(`📝 Quiz complete! ${score}% ${passed ? '✓ Passed' : '✗ Failed'} • +${xpResult.xpAwarded} XP`);
+              const newBadges = await XPSystem.checkBadges(this.user.id);
+              for (const b of newBadges) showToast(`🏆 Badge: ${b.name} +${b.xp} XP`);
+            } catch (e) { console.error('Quiz save failed', e); }
+          }
+
           renderQuestions();
         }}, `Submit Quiz (${answered}/${questions.length} answered)`);
         if (answered >= questions.length) submitBtn.removeAttribute('disabled');
@@ -1271,28 +1418,22 @@ const App = {
         for (const q of questions) if (q.correct.includes(state.answers[q.id])) correct++;
         const score = Math.round((correct / questions.length) * 100);
         const passed = score >= 70;
-        
-        const resDiv = el('div', {class:'sim-score-display'},
-          el('div', {style:`font-size:3rem;font-weight:800;font-family:var(--font-head);color:${passed ? 'var(--green)' : 'var(--red)'}`}, `${score}%`),
-          el('div', {style:'color:var(--text2);margin:8px 0'}, `${correct} / ${questions.length} correct`),
-          el('div', {class:`badge ${passed ? 'badge-green' : 'badge-red'}`, style:'font-size:.9rem;padding:6px 16px;margin:12px 0'}, passed ? '✓ PASSED' : '✗ NEEDS REVIEW'),
-          el('div', {style:'display:flex;gap:10px;justify-content:center;margin-top:16px'},
-            el('button', {class:'btn btn-outline', onClick:() => {
+
+        const resDiv = el('div', { class: 'sim-score-display' },
+          el('div', { style: `font-size:3rem;font-weight:800;font-family:var(--font-head);color:${passed ? 'var(--green)' : 'var(--red)'}` }, `${score}%`),
+          el('div', { style: 'color:var(--text2);margin:8px 0' }, `${correct} / ${questions.length} correct`),
+          el('div', { class: `badge ${passed ? 'badge-green' : 'badge-red'}`, style: 'font-size:.9rem;padding:6px 16px;margin:12px 0' }, passed ? '✓ PASSED' : '✗ NEEDS REVIEW'),
+          el('div', { style: 'display:flex;gap:10px;justify-content:center;margin-top:16px' },
+            el('button', { class: 'btn btn-outline', onClick: () => {
               state.answers = {}; state.submitted = false; state.startTime = Date.now(); renderQuestions();
-            }}, '↺ Retake'),
-            el('button', {class:'btn btn-ghost', onClick:()=>this.navigateTo('lesson', data)}, 'Back to Lesson')
+            }}, '↺ Retake')
           )
         );
         actDiv.appendChild(resDiv);
       }
     };
-    
-    const qWrap = el('div', {id:'quiz-questions'});
-    const actDiv = el('div', {id:'quiz-action', style:'margin-top:20px'});
-    wrap.appendChild(qWrap);
-    wrap.appendChild(actDiv);
+
     renderQuestions();
-    
     return wrap;
   },
   
